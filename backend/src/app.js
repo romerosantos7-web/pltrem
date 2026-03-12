@@ -8,14 +8,13 @@ const transactionRoutes = require('./routes/transactionRoutes');
 
 const app = express();
 
-app.use(cors()); // Permitir requisições do frontend (Netlify)
+app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
 
-// Rota de teste
 app.get('/', (req, res) => {
     res.json({ message: 'API da RBX Store funcionando!' });
 });

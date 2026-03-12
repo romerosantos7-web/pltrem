@@ -2,7 +2,7 @@ const db = require('../models/database');
 
 exports.getProfile = (req, res) => {
     db.get(
-        'SELECT id, username, email, discord, saldo, total_adicionado, total_gasto, created_at FROM usuarios WHERE id = ?',
+        'SELECT id, username, email, discord, saldo, total_adicionado, total_gasto, created_at FROM usuarios WHERE id = $1',
         [req.userId],
         (err, user) => {
             if (err) return res.status(500).json({ error: 'Erro no banco' });
@@ -14,7 +14,7 @@ exports.getProfile = (req, res) => {
 
 exports.getHistory = (req, res) => {
     db.all(
-        'SELECT * FROM transacoes WHERE usuario_id = ? ORDER BY created_at DESC',
+        'SELECT * FROM transacoes WHERE usuario_id = $1 ORDER BY created_at DESC',
         [req.userId],
         (err, rows) => {
             if (err) return res.status(500).json({ error: 'Erro no banco' });

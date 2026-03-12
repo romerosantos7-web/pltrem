@@ -84,3 +84,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1500); // tempo igual à duração da animação
     }
 });
+
+async function carregarSaldo() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+        const response = await fetch('https://pltrem.onrender.com/api/user/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            const user = await response.json();
+            document.getElementById('saldoDisplay').textContent =
+                user.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar saldo:', error);
+    }
+}
+
+// Chamar a função ao carregar a página (se o token existir)
+carregarSaldo();
