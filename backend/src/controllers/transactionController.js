@@ -9,8 +9,7 @@ exports.addSaldo = async (req, res) => {
     }
 
     try {
-        // Usar transação
-        const results = await db.transaction([
+        await db.transaction([
             {
                 sql: 'UPDATE usuarios SET saldo = saldo + $1, total_adicionado = total_adicionado + $1 WHERE id = $2',
                 params: [valor, userId]

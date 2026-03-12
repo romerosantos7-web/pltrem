@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../models/database');
 require('dotenv').config();
@@ -14,13 +14,14 @@ exports.register = (req, res) => {
         if (err) return res.status(500).json({ error: 'Erro ao criar senha' });
 
         db.run(
-            `INSERT INTO usuarios (username, email, senha_hash, discord) VALUES ($1, $2, $3, $4)`,
+            `INSERT INTO usuarios (username, email, senha_hash, discord) VALUES ($1, $2, $3, $4) RETURNING id`,
             [username, email, hash, discord || null],
             function (err) {
                 if (err) {
                     if (err.message.includes('UNIQUE') || err.constraint === 'usuarios_username_key') {
                         return res.status(409).json({ error: 'Usuário ou e-mail já existe' });
                     }
+                    console.error('Erro no INSERT:', err);
                     return res.status(500).json({ error: 'Erro no banco de dados' });
                 }
                 res.status(201).json({ message: 'Usuário criado com sucesso', id: this.lastID });

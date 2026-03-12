@@ -1,13 +1,13 @@
 const { Pool } = require('pg');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 const usePostgres = process.env.DB_TYPE === 'postgres';
 
 let db;
-let pgPool; // para PostgreSQL
+let pgPool;
 
 if (usePostgres) {
     pgPool = new Pool({
@@ -19,7 +19,6 @@ if (usePostgres) {
         ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : false,
     });
 
-    // Interface compatível com SQLite (callbacks)
     db = {
         run: (sql, params = [], callback) => {
             pgPool.query(sql, params, (err, res) => {
@@ -39,7 +38,6 @@ if (usePostgres) {
                 if (callback) callback(err, res?.rows);
             });
         },
-        // Método para transações
         transaction: async (queries) => {
             const client = await pgPool.connect();
             try {
@@ -58,14 +56,11 @@ if (usePostgres) {
                 client.release();
             }
         },
-        // Mantido para compatibilidade com SQLite (não usado no PostgreSQL)
         serialize: (fn) => fn(),
     };
 
-    // Inicializar tabelas
     initPostgres();
 } else {
-    // SQLite (desenvolvimento)
     const dbPath = path.resolve(__dirname, '../../database.db');
     db = new sqlite3.Database(dbPath, (err) => {
         if (err) console.error('Erro SQLite:', err.message);
@@ -100,7 +95,6 @@ async function initPostgres() {
             )
         `);
 
-        // Criar admin se não existir
         const adminUsername = 'admin';
         const adminEmail = 'admin@rbxstore.com';
         const adminPassword = 'Admin@123';
@@ -147,7 +141,6 @@ function initSqlite() {
             )
         `);
 
-        // Criar admin
         const adminUsername = 'admin';
         const adminEmail = 'admin@rbxstore.com';
         const adminPassword = 'Admin@123';
