@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBX Store | O Robux mais barato</title>
+    <!-- Fontes e ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Overlay de digitalização (scan) -->
+    <div class="scan-overlay"></div>
+
+    <!-- Fundo com elementos gráficos (blur) -->
+    <div class="bg-blur">
+        <div class="blur-circle circle-1"></div>
+        <div class="blur-circle circle-2"></div>
+        <div class="blur-circle circle-3"></div>
+    </div>
+
+    <!-- Cabeçalho -->
+    <header class="glass-header animate-fade-down">
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-cube"></i> RBX<span>Store</span>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="inicio.html" class="active">Início</a></li>
+                    <li><a href="robux.html">Robux</a></li>
+                    <li><a href="itens.html">Itens</a></li>
+                    <li><a href="atendimento.html">Atendimento</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline"><i class="fas fa-user"></i> Entrar</a>
+                <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
+                        id="saldoDisplay">R$ 0,00</span></a>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section com estatísticas -->
+        <section id="inicio" class="hero">
+            <div class="container hero-container">
+                <div class="hero-content glass-card animate-scale">
+                    <h1>O Robux <span class="highlight">mais barato</span> e seguro do Brasil</h1>
+                    <p>Preço imbatível, entrega rápida e suporte 24/7. Mais de 15 mil clientes confiam na RBX Store.</p>
+                    <div class="hero-buttons">
+                        <a href="robux.html" class="btn-primary btn-large"><i class="fas fa-bolt"></i> Comprar Robux</a>
+                        <a href="itens.html" class="btn-outline btn-large"><i class="fas fa-gift"></i> Ver Itens</a>
+                    </div>
+                </div>
+                <div class="hero-stats glass-card animate-scale" style="animation-delay: 0.2s;">
+                    <div class="stat-item">
+                        <span class="stat-value" id="usersOnline">128</span>
+                        <span class="stat-label">Usuários online</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">15k+</span>
+                        <span class="stat-label">Vendas realizadas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">4.9</span>
+                        <span class="stat-label"><i class="fas fa-star"></i> Avaliações</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de engenharia social - Por que somos os mais baratos -->
+        <section class="porque-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Por que a <span class="highlight">RBX Store</span> tem o menor preço?</h2>
+                    <p>Compra coletiva, parcerias diretas e anos de experiência no mercado Roblox</p>
+                </div>
+
+                <div class="cards-container">
+                    <!-- Card 1: Preço mais baixo -->
+                    <div class="porque-card glass-card animate-scale">
+                        <div class="porque-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <h3>Até 45% mais barato</h3>
+                        <p>Nossos preços são os menores do mercado. Compare 1000 Robux:</p>
+                        <div class="porque-comparacao">
+                            <span class="preco-oficial">R$ 59,00</span>
+                            <i class="fas fa-arrow-right"></i>
+                            <span class="preco-rbx">R$ 32,50</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Compra coletiva -->
+                    <div class="porque-card glass-card animate-scale" style="animation-delay: 0.1s;">
+                        <div class="porque-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Compra coletiva</h3>
+                        <p>Compramos em grande quantidade diretamente de parceiros, repassando o desconto para você.</p>
+                    </div>
+
+                    <!-- Card 3: Sem taxas ocultas -->
+                    <div class="porque-card glass-card animate-scale" style="animation-delay: 0.2s;">
+                        <div class="porque-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Sem taxas extras</h3>
+                        <p>O preço que você vê é o que você paga. Sem surpresas, sem taxas de transação.</p>
+                    </div>
+                </div>
+
+                <!-- Badges de confiança -->
+                <div class="trust-badges">
+                    <div class="trust-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Pagamento 100% seguro</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Entrega automática</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Suporte 24/7</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>Mais de 3 anos de mercado</span>
+                    </div>
+                </div>
+
+                <!-- Depoimento rápido (prova social) -->
+                <div class="testemunho-card glass-card">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"10/10 - A entrega é de prontidão a partir do pagamento, muito atenciosos e honestos, só compro
+                        aqui a partir de hoje!"</p>
+                    <div class="testemunho-autor">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Sheikoso • Primeiro Cliente</span>
+                    </div>
+                    <div class="testemunho-estrelas">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                            class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <!-- Chamada para ação final -->
+                <div class="cta-inferior">
+                    <a href="robux.html" class="btn-primary btn-large">Quero o menor preço <i
+                            class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="glass-footer animate-fade-up">
+        <div class="container footer-container">
+            <div class="footer-col">
+                <div class="logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
+                <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="inicio.html">Início</a></li>
+                    <li><a href="robux.html">Robux</a></li>
+                    <li><a href="itens.html">Itens</a></li>
+                    <li><a href="atendimento.html">Atendimento</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="termos.html">Termos de Uso</a></li>
+                    <li><a href="privacidade.html">Política de Privacidade</a></li>
+                    <li><a href="#">Reembolsos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contato</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> suporte@rbxstore.com</li>
+                    <li><i class="fas fa-clock"></i> 24/7 Online</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RBX Store. Todos os direitos reservados. Este site não é afiliado ao Roblox.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+
+</html>
