@@ -31,7 +31,7 @@ exports.criarPix = async (req, res) => {
         const payload = {
             amount: valor,
             payerName: user.username,
-            payerDocument: '00000000000', // Ideal: ter CPF do usuário
+            payerDocument: '00000000000',
             transactionId: nossoId,
             description: `Adição de saldo - ${user.username}`,
             projectWebhook: `${process.env.BASE_URL}/api/webhooks/misticpay`
@@ -47,12 +47,12 @@ exports.criarPix = async (req, res) => {
 
         const dados = response.data.data;
 
-        // Salva transação pendente
+        // Salva transação pendente (tipo 'adicao' e status 'PENDENTE')
         await new Promise((resolve, reject) => {
             db.run(
                 `INSERT INTO transacoes (usuario_id, tipo, valor, descricao, misticpay_id, status_pagamento)
                  VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-                [usuarioId, 'adicao_pendente', valor, 'Aguardando pagamento PIX', dados.transactionId, 'PENDENTE'],
+                [usuarioId, 'adicao', valor, 'Aguardando pagamento PIX', dados.transactionId, 'PENDENTE'],
                 function (err) {
                     if (err) reject(err);
                     else resolve();
@@ -83,7 +83,7 @@ exports.webhookMisticpay = async (req, res) => {
             return res.status(200).json({ message: 'Tipo ignorado' });
         }
 
-        const { transactionId, status, value } = notificacao;
+        const { transactionId, status, value } = notificacao; // value está em centavos
 
         // Busca transação pelo misticpay_id
         const transacao = await new Promise((resolve, reject) => {
@@ -98,10 +98,12 @@ exports.webhookMisticpay = async (req, res) => {
         }
 
         if (status === 'COMPLETO') {
-            // Atualiza transação
+            const valorReais = value / 100; // converte centavos para reais
+
+            // Atualiza status da transação
             await new Promise((resolve, reject) => {
                 db.run(
-                    `UPDATE transacoes SET tipo = 'adicao', status_pagamento = 'COMPLETO', descricao = 'Adição de saldo via PIX' WHERE id = $1`,
+                    `UPDATE transacoes SET status_pagamento = 'COMPLETO', descricao = 'Adição de saldo via PIX' WHERE id = $1`,
                     [transacao.id],
                     (err) => {
                         if (err) reject(err);
@@ -114,7 +116,7 @@ exports.webhookMisticpay = async (req, res) => {
             await new Promise((resolve, reject) => {
                 db.run(
                     `UPDATE usuarios SET saldo = saldo + $1, total_adicionado = total_adicionado + $1 WHERE id = $2`,
-                    [value, transacao.usuario_id],
+                    [valorReais, transacao.usuario_id],
                     (err) => {
                         if (err) reject(err);
                         else resolve();
@@ -122,7 +124,7 @@ exports.webhookMisticpay = async (req, res) => {
                 );
             });
 
-            console.log(`Saldo atualizado para usuário ${transacao.usuario_id}, valor R$ ${value}`);
+            console.log(`Saldo atualizado para usuário ${transacao.usuario_id}, valor R$ ${valorReais}`);
         } else if (['FALHA', 'CANCELADO'].includes(status)) {
             await new Promise((resolve, reject) => {
                 db.run(
