@@ -8,6 +8,124 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilos adicionais específicos para a página de saldo */
+        .saldo-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px;
+            color: white;
+        }
+
+        .saldo-card h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+
+        .slider-container {
+            margin: 30px 0;
+        }
+
+        .slider-value {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 10px;
+            color: var(--secondary);
+        }
+
+        .valores-predefinidos {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .valor-predefinido {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            min-width: 70px;
+        }
+
+        .valor-predefinido:hover {
+            background: white;
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .valor-personalizado {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .valor-personalizado label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .valor-personalizado input {
+            width: 200px;
+            padding: 12px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .valor-personalizado input:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        #btnAdicionarSaldo {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        #qrContainer {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        #qrCodeImage {
+            max-width: 250px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        #pixCode {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            word-break: break-all;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+
+        .btn-copiar,
+        .btn-fechar {
+            margin: 5px;
+            padding: 10px 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -42,76 +160,62 @@
     <main>
         <section class="saldo-section">
             <div class="container">
-                <div class="section-header">
-                    <h2>Meu <span class="highlight">Saldo</span></h2>
-                    <p>Adicione fundos via Pix para comprar Robux e itens</p>
-                </div>
-
                 <div class="saldo-card glass-card">
-                    <div class="saldo-atual">
-                        <span class="saldo-label">Seu saldo atual:</span>
-                        <span class="saldo-valor" id="saldoAtual">R$ 0,00</span>
+                    <h2><i class="fas fa-wallet"></i> Adicionar Saldo</h2>
+
+                    <!-- Slider -->
+                    <div class="slider-container">
+                        <input type="range" id="saldoSlider" min="5" max="500" step="5" value="50">
+                        <div class="slider-value">
+                            <span id="valorDisplay">R$ 50,00</span>
+                        </div>
                     </div>
 
-                    <div class="saldo-opcoes">
-                        <h3>Adicionar saldo via Pix</h3>
-
-                        <!-- Campo de valor exato (input) -->
-                        <div class="valor-exato">
-                            <label for="valorExato">Valor desejado (mínimo R$ 20)</label>
-                            <input type="number" id="valorExato" min="20" step="5" value="50" placeholder="R$ 0,00">
-                        </div>
-
-                        <!-- Slider -->
-                        <div class="slider-container">
-                            <input type="range" id="saldoSlider" min="20" max="500" step="5" value="50">
-                            <div class="slider-labels">
-                                <span>R$ 20</span>
-                                <span>R$ 250</span>
-                                <span>R$ 500</span>
-                            </div>
-                        </div>
-
-                        <!-- Valores predefinidos abaixo do slider -->
-                        <div class="valores-predefinidos">
-                            <button class="valor-btn" data-valor="20">R$ 20</button>
-                            <button class="valor-btn" data-valor="50">R$ 50</button>
-                            <button class="valor-btn" data-valor="100">R$ 100</button>
-                            <button class="valor-btn" data-valor="200">R$ 200</button>
-                            <button class="valor-btn" data-valor="500">R$ 500</button>
-                        </div>
-
-                        <button class="btn-adicionar" id="btnAdicionarSaldo">
-                            <i class="fas fa-qrcode"></i> Gerar QR Code Pix
-                        </button>
+                    <!-- Valores pré-definidos -->
+                    <div class="valores-predefinidos">
+                        <button class="valor-predefinido" data-valor="10">R$ 10</button>
+                        <button class="valor-predefinido" data-valor="20">R$ 20</button>
+                        <button class="valor-predefinido" data-valor="50">R$ 50</button>
+                        <button class="valor-predefinido" data-valor="100">R$ 100</button>
+                        <button class="valor-predefinido" data-valor="200">R$ 200</button>
                     </div>
 
-                    <div class="saldo-info">
-                        <p><i class="fas fa-info-circle"></i> O valor mínimo para recarga é R$ 20,00.</p>
-                        <p><i class="fas fa-shield-alt"></i> Pagamento 100% seguro via Pix com crédito instantâneo.</p>
-                        <p><i class="fas fa-clock"></i> Após a confirmação do pagamento, o saldo é atualizado
-                            automaticamente.</p>
+                    <!-- Valor personalizado -->
+                    <div class="valor-personalizado">
+                        <label for="valorNumerico">Ou digite o valor (mínimo R$ 5):</label>
+                        <input type="number" id="valorNumerico" min="5" max="500" step="5" value="50">
                     </div>
-                </div>
 
-                <!-- Histórico simulado -->
-                <div class="historico-card glass-card">
-                    <h3>Últimas movimentações</h3>
-                    <div class="historico-lista">
-                        <div class="historico-item">
-                            <span class="historico-desc">Compra de 1000 Robux</span>
-                            <span class="historico-data">12/03/2025</span>
-                            <span class="historico-valor negativo">- R$ 19,90</span>
+                    <!-- Botão Adicionar -->
+                    <button id="btnAdicionarSaldo" class="btn-primary">
+                        <i class="fas fa-qrcode"></i> Adicionar Saldo via PIX
+                    </button>
+
+                    <!-- Área do QR Code (inicialmente oculta) -->
+                    <div id="qrContainer" style="display: none;">
+                        <h3><i class="fas fa-qrcode"></i> Escaneie o QR Code</h3>
+                        <img id="qrCodeImage" src="" alt="QR Code PIX">
+                        <p><strong>Código copia-e-cola:</strong></p>
+                        <div id="pixCode"></div>
+                        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
+                            <button id="copiarPix" class="btn-outline btn-copiar">
+                                <i class="fas fa-copy"></i> Copiar
+                            </button>
+                            <button id="fecharQr" class="btn-outline btn-fechar">
+                                <i class="fas fa-times"></i> Fechar
+                            </button>
                         </div>
-                        <div class="historico-item">
-                            <span class="historico-desc">Adição de saldo via Pix</span>
-                            <span class="historico-data">10/03/2025</span>
-                            <span class="historico-valor positivo">+ R$ 50,00</span>
-                        </div>
-                        <div class="historico-item">
-                            <span class="historico-desc">Compra de item (BladeBall)</span>
-                            <span class="historico-data">05/03/2025</span>
-                            <span class="historico-valor negativo">- R$ 14,90</span>
+                        <p class="small-note" style="margin-top: 15px;">
+                            <i class="fas fa-clock"></i> Após o pagamento, o saldo será creditado automaticamente.
+                        </p>
+                    </div>
+
+                    <!-- Histórico de movimentações (opcional) -->
+                    <div style="margin-top: 40px;">
+                        <h3 style="text-align: center; margin-bottom: 20px;">Últimas movimentações</h3>
+                        <div id="historicoContainer">
+                            <!-- Será preenchido via JavaScript futuramente -->
+                            <p style="text-align: center; opacity: 0.7;">Nenhuma movimentação recente.</p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +261,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 RBX Store. Todos os direitos reservados.</p>
+            <p>&copy; 2025 RBX Store. Todos os direitos reservados. Este site não é afiliado ao Roblox.</p>
         </div>
     </footer>
 

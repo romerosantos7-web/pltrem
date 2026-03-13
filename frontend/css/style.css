@@ -2086,3 +2086,11 @@ input[type=range]::-webkit-slider-thumb {
         font-size: 1.3rem;
     }
 }
+
+#qrContainer {
+    animation: fadeScale 0.5s ease;
+}
+
+#qrCodeImage {
+    border: 2px solid var(--secondary);
+}
