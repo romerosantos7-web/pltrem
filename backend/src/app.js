@@ -5,6 +5,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const pagamentoRoutes = require('./routes/pagamentoRoutes'); // <-- nova
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/pagamentos', pagamentoRoutes); // <-- nova
 
 app.get('/', (req, res) => {
     res.json({ message: 'API da RBX Store funcionando!' });
