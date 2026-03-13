@@ -1,49 +1,11 @@
-// Atualização da calculadora de Robux
+// script.js
 document.addEventListener('DOMContentLoaded', function () {
-    const slider = document.getElementById('robuxSlider');
-    const robuxSpan = document.getElementById('robuxValue');
-    const priceSpan = document.getElementById('priceValue');
-    const quickBtns = document.querySelectorAll('.quick-btn');
-
-    // Função para calcular preço (exemplo: $0.0199 por Robux)
-    function updatePrice(robux) {
-        const price = (robux * 0.0199).toFixed(2);
-        robuxSpan.textContent = robux;
-        priceSpan.textContent = `$${price}`;
-    }
-
-    // Evento do slider
-    slider.addEventListener('input', function () {
-        updatePrice(this.value);
-    });
-
-    // Botões rápidos
-    quickBtns.forEach(btn => {
-        btn.addEventListener('click', function () {
-            const robux = this.getAttribute('data-robux');
-            slider.value = robux;
-            updatePrice(robux);
-        });
-    });
-
-    // Inicializar com valor padrão
-    updatePrice(slider.value);
-
-    // Simulação de usuários online (número aleatório para interatividade)
-    const usersSpan = document.getElementById('usersOnline');
-    if (usersSpan) {
-        setInterval(() => {
-            const random = Math.floor(Math.random() * (250 - 100 + 1)) + 100;
-            usersSpan.textContent = random;
-        }, 5000);
-    }
-
-    // Menu mobile toggle (simples)
+    // Menu mobile
     const mobileToggle = document.getElementById('mobileToggle');
     const navMenu = document.querySelector('.nav-menu');
     const headerActions = document.querySelector('.header-actions');
 
-    if (mobileToggle) {
+    if (mobileToggle && navMenu && headerActions) {
         mobileToggle.addEventListener('click', () => {
             if (navMenu.style.display === 'flex') {
                 navMenu.style.display = 'none';
@@ -51,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 navMenu.style.display = 'flex';
                 headerActions.style.display = 'flex';
-                // Para mobile, colocar coluna
                 navMenu.style.flexDirection = 'column';
                 navMenu.style.position = 'absolute';
                 navMenu.style.top = '80px';
@@ -76,32 +37,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Remover o overlay de scan após a animação (opcional)
-    const scanOverlay = document.querySelector('.scan-overlay');
-    if (scanOverlay) {
-        setTimeout(() => {
-            scanOverlay.remove();
-        }, 1500); // tempo igual à duração da animação
+    // Simulação de usuários online (se existir o elemento)
+    const usersSpan = document.getElementById('usersOnline');
+    if (usersSpan) {
+        setInterval(() => {
+            const random = Math.floor(Math.random() * (250 - 100 + 1)) + 100;
+            usersSpan.textContent = random;
+        }, 5000);
     }
 });
-
-async function carregarSaldo() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-
-    try {
-        const response = await fetch('https://pltrem.onrender.com/api/user/profile', {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-            const user = await response.json();
-            document.getElementById('saldoDisplay').textContent =
-                user.saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-    } catch (error) {
-        console.error('Erro ao carregar saldo:', error);
-    }
-}
-
-// Chamar a função ao carregar a página (se o token existir)
-carregarSaldo();

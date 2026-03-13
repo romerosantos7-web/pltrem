@@ -1,14 +1,10 @@
 const db = require('../models/database');
-const axios = require('axios'); // Instale com npm install axios
+const axios = require('axios');
 
-// Credenciais da MisticPay (armazenadas em variáveis de ambiente)
 const CI = process.env.MISTICPAY_CI;
 const CS = process.env.MISTICPAY_CS;
 const API_BASE = 'https://api.misticpay.com/api';
 
-/**
- * Gera um QR Code PIX para adicionar saldo
- */
 exports.criarPix = async (req, res) => {
     try {
         const { valor } = req.body;
@@ -18,7 +14,7 @@ exports.criarPix = async (req, res) => {
             return res.status(400).json({ error: 'Valor mínimo de R$ 5,00' });
         }
 
-        // Busca dados do usuário (para nome e documento)
+        // Busca dados do usuário
         const user = await new Promise((resolve, reject) => {
             db.get('SELECT username, email FROM usuarios WHERE id = $1', [usuarioId], (err, row) => {
                 if (err) reject(err);
@@ -30,20 +26,17 @@ exports.criarPix = async (req, res) => {
             return res.status(404).json({ error: 'Usuário não encontrado' });
         }
 
-        // Gerar um ID único para esta transação (relacionado ao nosso sistema)
         const nossoId = `rbx_${Date.now()}_${usuarioId}`;
 
-        // Corpo da requisição para MisticPay
         const payload = {
             amount: valor,
             payerName: user.username,
-            payerDocument: '00000000000', // Placeholder - idealmente teríamos CPF do usuário
+            payerDocument: '00000000000', // Ideal: ter CPF do usuário
             transactionId: nossoId,
-            description: `Adição de saldo - Usuário ${user.username}`,
-            projectWebhook: `${process.env.BASE_URL}/api/webhooks/misticpay` // URL do webhook
+            description: `Adição de saldo - ${user.username}`,
+            projectWebhook: `${process.env.BASE_URL}/api/webhooks/misticpay`
         };
 
-        // Chamada à API MisticPay
         const response = await axios.post(`${API_BASE}/transactions/create`, payload, {
             headers: {
                 'ci': CI,
@@ -54,20 +47,19 @@ exports.criarPix = async (req, res) => {
 
         const dados = response.data.data;
 
-        // Salva a transação pendente no banco
-        const transacaoId = await new Promise((resolve, reject) => {
+        // Salva transação pendente
+        await new Promise((resolve, reject) => {
             db.run(
                 `INSERT INTO transacoes (usuario_id, tipo, valor, descricao, misticpay_id, status_pagamento)
                  VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
                 [usuarioId, 'adicao_pendente', valor, 'Aguardando pagamento PIX', dados.transactionId, 'PENDENTE'],
                 function (err) {
                     if (err) reject(err);
-                    else resolve(this.lastID);
+                    else resolve();
                 }
             );
         });
 
-        // Retorna os dados do PIX para o frontend
         res.json({
             message: 'QR Code gerado com sucesso',
             qrCodeBase64: dados.qrCodeBase64,
@@ -78,28 +70,22 @@ exports.criarPix = async (req, res) => {
 
     } catch (error) {
         console.error('Erro ao gerar PIX:', error.response?.data || error.message);
-        res.status(500).json({ error: 'Erro ao processar solicitação de pagamento' });
+        res.status(500).json({ error: 'Erro ao processar pagamento' });
     }
 };
 
-/**
- * Webhook para receber notificações da MisticPay
- */
 exports.webhookMisticpay = async (req, res) => {
     try {
-        // A MisticPay envia um POST com os dados da transação
         const notificacao = req.body;
-
         console.log('Webhook recebido:', notificacao);
 
-        // Verificar se é uma transação de depósito
         if (notificacao.transactionType !== 'DEPOSITO') {
-            return res.status(200).json({ message: 'Tipo não processado' });
+            return res.status(200).json({ message: 'Tipo ignorado' });
         }
 
         const { transactionId, status, value } = notificacao;
 
-        // Localizar nossa transação pelo misticpay_id
+        // Busca transação pelo misticpay_id
         const transacao = await new Promise((resolve, reject) => {
             db.get('SELECT id, usuario_id FROM transacoes WHERE misticpay_id = $1', [transactionId], (err, row) => {
                 if (err) reject(err);
@@ -111,9 +97,8 @@ exports.webhookMisticpay = async (req, res) => {
             return res.status(404).json({ error: 'Transação não encontrada' });
         }
 
-        // Se o status for COMPLETO, atualizar saldo do usuário
         if (status === 'COMPLETO') {
-            // Atualiza transação para concluída
+            // Atualiza transação
             await new Promise((resolve, reject) => {
                 db.run(
                     `UPDATE transacoes SET tipo = 'adicao', status_pagamento = 'COMPLETO', descricao = 'Adição de saldo via PIX' WHERE id = $1`,
@@ -138,8 +123,7 @@ exports.webhookMisticpay = async (req, res) => {
             });
 
             console.log(`Saldo atualizado para usuário ${transacao.usuario_id}, valor R$ ${value}`);
-        } else if (status === 'FALHA' || status === 'CANCELADO') {
-            // Marca transação como falha
+        } else if (['FALHA', 'CANCELADO'].includes(status)) {
             await new Promise((resolve, reject) => {
                 db.run(
                     `UPDATE transacoes SET status_pagamento = $1 WHERE id = $2`,
@@ -152,7 +136,6 @@ exports.webhookMisticpay = async (req, res) => {
             });
         }
 
-        // Sempre retornar 200 para a MisticPay
         res.status(200).json({ message: 'OK' });
 
     } catch (error) {

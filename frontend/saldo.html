@@ -9,72 +9,164 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Estilos adicionais específicos para a página de saldo */
+        /* Estilos exclusivos para a página de saldo (podem ser movidos para style.css depois) */
+        .saldo-page {
+            padding: 40px 0;
+            min-height: 70vh;
+        }
+
         .saldo-card {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 40px;
             color: white;
+            border-radius: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .saldo-card h2 {
-            text-align: center;
-            font-size: 2rem;
+        .saldo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .saldo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .saldo-header h2 {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .saldo-header h2 i {
             color: var(--secondary);
         }
 
+        .saldo-atual {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px 25px;
+            border-radius: 60px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .saldo-atual span {
+            color: var(--secondary);
+            margin-left: 10px;
+        }
+
         .slider-container {
-            margin: 30px 0;
+            margin: 40px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            transition: 0.2s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: var(--secondary);
         }
 
         .slider-value {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-top: 10px;
+            margin: 20px 0;
             color: var(--secondary);
+            text-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+            animation: pulse 2s infinite;
         }
 
-        .valores-predefinidos {
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.02);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .quick-options {
             display: flex;
             gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 20px 0;
+            margin: 30px 0;
         }
 
-        .valor-predefinido {
-            background: rgba(255, 255, 255, 0.15);
+        .quick-option {
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 40px;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
-            min-width: 70px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            min-width: 80px;
         }
 
-        .valor-predefinido:hover {
+        .quick-option:hover {
             background: white;
             color: var(--primary);
-            transform: scale(1.05);
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .valor-personalizado {
+        .custom-value {
             text-align: center;
             margin: 25px 0;
         }
 
-        .valor-personalizado label {
+        .custom-value label {
             display: block;
             margin-bottom: 10px;
             font-weight: 500;
+            color: white;
         }
 
-        .valor-personalizado input {
+        .custom-value input {
             width: 200px;
             padding: 12px 20px;
             border-radius: 40px;
@@ -83,47 +175,228 @@
             color: white;
             font-size: 1.1rem;
             text-align: center;
+            transition: 0.3s;
         }
 
-        .valor-personalizado input:focus {
+        .custom-value input:focus {
             border-color: var(--secondary);
             outline: none;
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
         }
 
-        #btnAdicionarSaldo {
+        .btn-add {
             width: 100%;
-            padding: 16px;
-            font-size: 1.2rem;
-            margin-top: 20px;
+            padding: 18px;
+            border-radius: 60px;
+            border: none;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
-        #qrContainer {
-            margin-top: 30px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 20px;
+        .btn-add:hover:not(:disabled) {
+            transform: scale(1.02) translateY(-3px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-add:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-add i {
+            font-size: 1.5rem;
+        }
+
+        /* Área do QR Code com animação */
+        .qr-section {
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 30px;
+            padding: 30px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.5s ease;
         }
 
-        #qrCodeImage {
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .qr-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .qr-code-img {
             max-width: 250px;
-            border-radius: 10px;
-            margin: 15px 0;
+            border-radius: 20px;
+            margin: 15px auto;
+            padding: 10px;
+            background: white;
+            display: inline-block;
         }
 
-        #pixCode {
+        .pix-code {
             background: rgba(255, 255, 255, 0.1);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 15px;
             word-break: break-all;
             font-family: monospace;
-            margin: 15px 0;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .btn-copiar,
-        .btn-fechar {
-            margin: 5px;
-            padding: 10px 20px;
+        .qr-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-outline {
+            border: 2px solid white;
+            color: white;
+            background: transparent;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: 0.3s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Feedback de loading */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Mensagens de feedback */
+        .feedback-message {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        .feedback-success {
+            background: rgba(72, 187, 120, 0.2);
+            border: 1px solid #48bb78;
+            color: #fff;
+        }
+
+        .feedback-error {
+            background: rgba(245, 101, 101, 0.2);
+            border: 1px solid #f56565;
+            color: #fff;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Histórico */
+        .historico-section {
+            margin-top: 40px;
+        }
+
+        .historico-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .historico-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .historico-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.2s;
+        }
+
+        .historico-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .historico-desc {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .historico-valor {
+            font-weight: 700;
+        }
+
+        .historico-valor.positivo {
+            color: #48bb78;
+        }
+
+        .historico-valor.negativo {
+            color: #f56565;
+        }
+
+        .historico-data {
+            font-size: 0.85rem;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -150,77 +423,83 @@
             </nav>
             <div class="header-actions">
                 <a href="login.html" class="btn-outline"><i class="fas fa-user"></i> Entrar</a>
-                <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
-                        id="saldoDisplay">R$ 0,00</span></a>
+                <a href="saldo.html" class="btn-primary saldo-btn">
+                    <i class="fas fa-wallet"></i> <span id="saldoDisplay">R$ 0,00</span>
+                </a>
             </div>
             <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
         </div>
     </header>
 
-    <main>
-        <section class="saldo-section">
-            <div class="container">
-                <div class="saldo-card glass-card">
-                    <h2><i class="fas fa-wallet"></i> Adicionar Saldo</h2>
-
-                    <!-- Slider -->
-                    <div class="slider-container">
-                        <input type="range" id="saldoSlider" min="20" max="500" step="1" value="50">
-                        <div class="slider-value">
-                            <span id="valorDisplay">R$ 50,00</span>
-                        </div>
+    <main class="saldo-page">
+        <div class="container">
+            <div class="saldo-card glass-card">
+                <div class="saldo-header">
+                    <h2><i class="fas fa-wallet"></i> Meu Saldo</h2>
+                    <div class="saldo-atual">
+                        Saldo: <span id="saldoAtual">R$ 0,00</span>
                     </div>
+                </div>
 
-                    <!-- Valores pré-definidos -->
-                    <div class="valores-predefinidos">
-                        <button class="valor-predefinido" data-valor="10">R$ 10</button>
-                        <button class="valor-predefinido" data-valor="20">R$ 20</button>
-                        <button class="valor-predefinido" data-valor="50">R$ 50</button>
-                        <button class="valor-predefinido" data-valor="100">R$ 100</button>
-                        <button class="valor-predefinido" data-valor="200">R$ 200</button>
+                <!-- Slider -->
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Valor desejado</span>
+                        <span>R$ 20 a R$ 500</span>
                     </div>
+                    <input type="range" id="saldoSlider" min="20" max="500" step="1" value="50">
+                    <div class="slider-value" id="valorDisplay">R$ 50,00</div>
+                </div>
 
-                    <!-- Valor personalizado -->
-                    <div class="valor-personalizado">
-                        <label for="valorNumerico">Ou digite o valor (mínimo R$ 20):</label>
-                        <input type="number" id="valorNumerico" min="20" max="500" step="1" value="50">
+                <!-- Opções rápidas -->
+                <div class="quick-options">
+                    <button class="quick-option" data-valor="20">R$ 20</button>
+                    <button class="quick-option" data-valor="50">R$ 50</button>
+                    <button class="quick-option" data-valor="100">R$ 100</button>
+                    <button class="quick-option" data-valor="200">R$ 200</button>
+                </div>
+
+                <!-- Botão principal -->
+                <button class="btn-add" id="btnAdicionarSaldo">
+                    <i class="fas fa-qrcode"></i> Gerar PIX para adicionar
+                </button>
+
+                <!-- Área de feedback (mensagens) -->
+                <div id="feedbackArea"></div>
+
+                <!-- Área do QR Code (inicialmente oculta) -->
+                <div id="qrSection" class="qr-section" style="display: none;">
+                    <h3><i class="fas fa-qrcode"></i> Escaneie o QR Code</h3>
+                    <div class="qr-code-img">
+                        <img id="qrCodeImage" src="" alt="QR Code PIX" style="max-width: 100%;">
                     </div>
-
-                    <!-- Botão Adicionar -->
-                    <button id="btnAdicionarSaldo" class="btn-primary">
-                        <i class="fas fa-qrcode"></i> Adicionar Saldo via PIX
-                    </button>
-
-                    <!-- Área do QR Code (inicialmente oculta) -->
-                    <div id="qrContainer" style="display: none;">
-                        <h3><i class="fas fa-qrcode"></i> Escaneie o QR Code</h3>
-                        <img id="qrCodeImage" src="" alt="QR Code PIX">
-                        <p><strong>Código copia-e-cola:</strong></p>
-                        <div id="pixCode"></div>
-                        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px;">
-                            <button id="copiarPix" class="btn-outline btn-copiar">
-                                <i class="fas fa-copy"></i> Copiar
-                            </button>
-                            <button id="fecharQr" class="btn-outline btn-fechar">
-                                <i class="fas fa-times"></i> Fechar
-                            </button>
-                        </div>
-                        <p class="small-note" style="margin-top: 15px;">
-                            <i class="fas fa-clock"></i> Após o pagamento, o saldo será creditado automaticamente.
-                        </p>
+                    <p><strong>Código copia-e-cola:</strong></p>
+                    <div class="pix-code" id="pixCode"></div>
+                    <div class="qr-actions">
+                        <button class="btn-outline" id="copiarPix">
+                            <i class="fas fa-copy"></i> Copiar código
+                        </button>
+                        <button class="btn-outline" id="fecharQr">
+                            <i class="fas fa-times"></i> Fechar
+                        </button>
                     </div>
+                    <p class="small-note" style="margin-top: 15px;">
+                        <i class="fas fa-clock"></i> Após o pagamento, o saldo será creditado em instantes.
+                    </p>
+                </div>
 
-                    <!-- Histórico de movimentações (opcional) -->
-                    <div style="margin-top: 40px;">
-                        <h3 style="text-align: center; margin-bottom: 20px;">Últimas movimentações</h3>
-                        <div id="historicoContainer">
-                            <!-- Será preenchido via JavaScript futuramente -->
-                            <p style="text-align: center; opacity: 0.7;">Nenhuma movimentação recente.</p>
+                <!-- Histórico de movimentações -->
+                <div class="historico-section">
+                    <h3><i class="fas fa-history"></i> Últimas movimentações</h3>
+                    <div class="historico-list" id="historicoList">
+                        <!-- Será preenchido via JS -->
+                        <div class="historico-item" style="justify-content: center; opacity: 0.7;">
+                            Carregando...
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <footer class="glass-footer animate-fade-up">
