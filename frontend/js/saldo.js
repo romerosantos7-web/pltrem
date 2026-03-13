@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Campo numérico (sincroniza com slider)
     valorNumerico.addEventListener('input', function () {
         let valor = parseFloat(this.value) || 0;
-        if (valor < 5) valor = 5;
+        if (valor < 20) valor = 20;
         if (valor > 500) valor = 500;
         slider.value = valor;
         atualizarDisplay(valor);
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        if (valor < 5) {
+        if (valor < 20) {
             alert('Valor mínimo é R$ 5,00');
             return;
         }
