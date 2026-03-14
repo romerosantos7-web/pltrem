@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 localStorage.setItem('rbx_user', JSON.stringify(userData));
 
                 alert('Login efetuado com sucesso!');
-                window.location.href = 'inicio.html';
+                window.location.href = 'index.html';
             } else {
                 alert(data.error || 'Usuário ou senha inválidos');
             }

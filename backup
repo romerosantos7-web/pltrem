@@ -31,7 +31,7 @@
             </div>
             <nav class="nav-menu">
                 <ul>
-                    <li><a href="inicio.html">Início</a></li>
+                    <li><a href="index.html">Início</a></li>
                     <li><a href="robux.html">Robux</a></li>
                     <li><a href="itens.html" class="active">Itens</a></li>
                     <li><a href="atendimento.html">Atendimento</a></li>
