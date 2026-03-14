@@ -19,25 +19,41 @@
 
     <header class="glass-header animate-fade-down">
         <div class="container header-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="logo">
                 <i class="fas fa-cube"></i> RBX<span>Store</span>
             </div>
-            <nav class="nav-menu">
-                <ul>
-                    <li><a href="inicio.html">Início</a></li>
-                    <li><a href="robux.html">Robux</a></li>
-                    <li><a href="itens.html">Itens</a></li>
-                    <li><a href="atendimento.html">Atendimento</a></li>
-                </ul>
-            </nav>
             <div class="header-actions">
-                <a href="login.html" class="btn-outline"><i class="fas fa-user"></i> Entrar</a>
                 <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
                         id="saldoDisplay">R$ 0,00</span></a>
             </div>
             <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
         </div>
     </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-cube"></i> RBX<span>Store</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="inicio.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="robux.html"><i class="fas fa-coins"></i> Robux</a></li>
+                <li><a href="itens.html"><i class="fas fa-gift"></i> Itens</a></li>
+                <li><a href="atendimento.html"><i class="fas fa-headset"></i> Atendimento</a></li>
+                <li><a href="saldo.html"><i class="fas fa-wallet"></i> Meu Saldo</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 RBX Store</p>
+        </div>
+    </aside>
 
     <main>
         <section class="termos-section">
@@ -56,14 +72,12 @@
                                 presentes Termos de Uso. Caso não concorde com qualquer disposição, não utilize nossos
                                 serviços.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-cube"></i> 2. Descrição dos Serviços</h2>
                             <p>A RBX Store atua como intermediária na venda de Robux e itens virtuais para jogos da
                                 plataforma Roblox. Todos os produtos são entregues conforme a quantidade adquirida e as
                                 instruções fornecidas no momento da compra.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-money-bill-wave"></i> 3. Pagamentos e Reembolsos</h2>
                             <p><strong>3.1.</strong> A única forma de pagamento aceita é via PIX, com valor mínimo de R$
@@ -86,7 +100,6 @@
                                 </li>
                             </ul>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-exclamation-triangle"></i> 4. Responsabilidades da Loja</h2>
                             <p><strong>4.1.</strong> A RBX Store se compromete a entregar os produtos adquiridos no
@@ -102,7 +115,6 @@
                                 <li>Problemas técnicos decorrentes de atualizações da plataforma Roblox.</li>
                             </ul>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-ban"></i> 5. Isenção de Responsabilidade</h2>
                             <p><strong>5.1.</strong> Todos os produtos possuem sua forma específica de utilização dentro
@@ -115,7 +127,6 @@
                                 Roblox Corporation. Todas as marcas registradas pertencem a seus respectivos
                                 proprietários.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-gavel"></i> 6. Disposições Legais</h2>
                             <p><strong>6.1.</strong> Estes Termos são regidos pelas leis da República Federativa do
@@ -129,12 +140,10 @@
                             <p><strong>6.3.</strong> A tolerância quanto ao descumprimento de qualquer cláusula não
                                 constituirá novação ou precedente.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-envelope"></i> 7. Contato</h2>
                             <p>Para questões legais ou esclarecimentos, entre em contato pelo e-mail:
-                                <strong>legal@rbxstore.com</strong>
-                            </p>
+                                <strong>legal@rbxstore.com</strong></p>
                         </div>
                     </div>
 
@@ -150,7 +159,9 @@
     <footer class="glass-footer animate-fade-up">
         <div class="container footer-container">
             <div class="footer-col">
-                <div class="logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i> RBX<span>Store</span>
+                </div>
                 <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-discord"></i></a>
@@ -185,7 +196,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 RBX Store. Todos os direitos reservados.</p>
+            <p>&copy; 2025 RBX Store. Todos os direitos reservados. Este site não é afiliado ao Roblox.</p>
         </div>
     </footer>
 

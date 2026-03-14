@@ -19,24 +19,42 @@
 
     <header class="glass-header animate-fade-down">
         <div class="container header-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="logo">
                 <i class="fas fa-cube"></i> RBX<span>Store</span>
             </div>
-            <nav class="nav-menu">
-                <ul>
-                    <li><a href="inicio.html">Início</a></li>
-                    <li><a href="robux.html">Robux</a></li>
-                    <li><a href="itens.html" class="active">Itens</a></li>
-                    <li><a href="atendimento.html">Atendimento</a></li>
-                </ul>
-            </nav>
             <div class="header-actions">
-                <a href="#" class="btn-outline"><i class="fas fa-user"></i> Entrar</a>
-                <a href="#" class="btn-primary"><i class="fas fa-shopping-cart"></i> Carrinho</a>
+                <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
+                        id="saldoDisplay">R$ 0,00</span></a>
             </div>
             <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
         </div>
     </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-cube"></i> RBX<span>Store</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="inicio.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="robux.html"><i class="fas fa-coins"></i> Robux</a></li>
+                <li><a href="itens.html"><i class="fas fa-gift"></i> Itens</a></li>
+                <li><a href="atendimento.html"><i class="fas fa-headset"></i> Atendimento</a></li>
+                <li><a href="saldo.html"><i class="fas fa-wallet"></i> Meu Saldo</a></li>
+                <!-- O link de login será inserido aqui pelo JS -->
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 RBX Store</p>
+        </div>
+    </aside>
 
     <main>
         <section class="atendimento-section">
@@ -46,7 +64,6 @@
                     <p>Tire suas dúvidas e escolha como falar conosco</p>
                 </div>
 
-                <!-- Card FAQ -->
                 <div class="faq-card glass-card animate-scale">
                     <div class="faq-icon">
                         <i class="fas fa-question-circle"></i>
@@ -89,11 +106,10 @@
                     </div>
                 </div>
 
-                <!-- Card de Atendimento (botões) -->
                 <div class="atendimento-card glass-card animate-scale" style="animation-delay: 0.2s;">
                     <h3>Escolha como deseja ser atendido</h3>
                     <div class="atendimento-botoes">
-                        <a href="https://discord.gg/xxjPsUrGmf" class="btn-atendimento discord">
+                        <a href="#" class="btn-atendimento discord">
                             <i class="fab fa-discord"></i>
                             <span>Atendimento - Via Discord</span>
                         </a>
@@ -114,10 +130,13 @@
     <footer class="glass-footer animate-fade-up">
         <div class="container footer-container">
             <div class="footer-col">
-                <div class="logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i> RBX<span>Store</span>
+                </div>
                 <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
                     <a href="#"><i class="fab fa-tiktok"></i></a>
                 </div>
@@ -125,7 +144,7 @@
             <div class="footer-col">
                 <h4>Links Rápidos</h4>
                 <ul>
-                    <li><a href="index.html">Início</a></li>
+                    <li><a href="inicio.html">Início</a></li>
                     <li><a href="robux.html">Robux</a></li>
                     <li><a href="itens.html">Itens</a></li>
                     <li><a href="atendimento.html">Atendimento</a></li>
@@ -148,7 +167,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 RBX Store. Todos os direitos reservados.</p>
+            <p>&copy; 2025 RBX Store. Todos os direitos reservados. Este site não é afiliado ao Roblox.</p>
         </div>
     </footer>
 

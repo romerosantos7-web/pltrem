@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* Estilos exclusivos para a página de saldo (podem ser movidos para style.css depois) */
+        /* Estilos exclusivos para a página de saldo */
         .saldo-page {
             padding: 40px 0;
             min-height: 70vh;
@@ -217,7 +217,6 @@
             font-size: 1.5rem;
         }
 
-        /* Área do QR Code com animação */
         .qr-section {
             margin-top: 40px;
             background: rgba(0, 0, 0, 0.3);
@@ -291,7 +290,6 @@
             color: var(--primary);
         }
 
-        /* Feedback de loading */
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -308,7 +306,6 @@
             }
         }
 
-        /* Mensagens de feedback */
         .feedback-message {
             margin: 20px 0;
             padding: 15px;
@@ -342,7 +339,6 @@
             }
         }
 
-        /* Histórico */
         .historico-section {
             margin-top: 40px;
         }
@@ -410,26 +406,41 @@
 
     <header class="glass-header animate-fade-down">
         <div class="container header-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="logo">
                 <i class="fas fa-cube"></i> RBX<span>Store</span>
             </div>
-            <nav class="nav-menu">
-                <ul>
-                    <li><a href="inicio.html">Início</a></li>
-                    <li><a href="robux.html">Robux</a></li>
-                    <li><a href="itens.html">Itens</a></li>
-                    <li><a href="atendimento.html">Atendimento</a></li>
-                </ul>
-            </nav>
             <div class="header-actions">
-                <a href="login.html" class="btn-outline"><i class="fas fa-user"></i> Entrar</a>
-                <a href="saldo.html" class="btn-primary saldo-btn">
-                    <i class="fas fa-wallet"></i> <span id="saldoDisplay">R$ 0,00</span>
-                </a>
+                <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
+                        id="saldoDisplay">R$ 0,00</span></a>
             </div>
             <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
         </div>
     </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-cube"></i> RBX<span>Store</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="inicio.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="robux.html"><i class="fas fa-coins"></i> Robux</a></li>
+                <li><a href="itens.html"><i class="fas fa-gift"></i> Itens</a></li>
+                <li><a href="atendimento.html"><i class="fas fa-headset"></i> Atendimento</a></li>
+                <li><a href="saldo.html"><i class="fas fa-wallet"></i> Meu Saldo</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 RBX Store</p>
+        </div>
+    </aside>
 
     <main class="saldo-page">
         <div class="container">
@@ -441,33 +452,34 @@
                     </div>
                 </div>
 
-                <!-- Slider -->
                 <div class="slider-container">
                     <div class="slider-label">
                         <span>Valor desejado</span>
-                        <span>R$ 20 a R$ 500</span>
+                        <span>R$ 5 a R$ 500</span>
                     </div>
-                    <input type="range" id="saldoSlider" min="20" max="500" step="1" value="50">
+                    <input type="range" id="saldoSlider" min="5" max="500" step="5" value="50">
                     <div class="slider-value" id="valorDisplay">R$ 50,00</div>
                 </div>
 
-                <!-- Opções rápidas -->
                 <div class="quick-options">
+                    <button class="quick-option" data-valor="10">R$ 10</button>
                     <button class="quick-option" data-valor="20">R$ 20</button>
                     <button class="quick-option" data-valor="50">R$ 50</button>
                     <button class="quick-option" data-valor="100">R$ 100</button>
                     <button class="quick-option" data-valor="200">R$ 200</button>
                 </div>
 
-                <!-- Botão principal -->
+                <div class="custom-value">
+                    <label for="valorNumerico">Digite um valor personalizado:</label>
+                    <input type="number" id="valorNumerico" min="5" max="500" step="5" value="50" placeholder="R$ 0,00">
+                </div>
+
                 <button class="btn-add" id="btnAdicionarSaldo">
                     <i class="fas fa-qrcode"></i> Gerar PIX para adicionar
                 </button>
 
-                <!-- Área de feedback (mensagens) -->
                 <div id="feedbackArea"></div>
 
-                <!-- Área do QR Code (inicialmente oculta) -->
                 <div id="qrSection" class="qr-section" style="display: none;">
                     <h3><i class="fas fa-qrcode"></i> Escaneie o QR Code</h3>
                     <div class="qr-code-img">
@@ -488,11 +500,9 @@
                     </p>
                 </div>
 
-                <!-- Histórico de movimentações -->
                 <div class="historico-section">
                     <h3><i class="fas fa-history"></i> Últimas movimentações</h3>
                     <div class="historico-list" id="historicoList">
-                        <!-- Será preenchido via JS -->
                         <div class="historico-item" style="justify-content: center; opacity: 0.7;">
                             Carregando...
                         </div>
@@ -505,7 +515,9 @@
     <footer class="glass-footer animate-fade-up">
         <div class="container footer-container">
             <div class="footer-col">
-                <div class="logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i> RBX<span>Store</span>
+                </div>
                 <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-discord"></i></a>

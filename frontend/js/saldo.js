@@ -1,4 +1,5 @@
 // saldo.js - Versão aprimorada com feedback visual
+// Agora com filtro de histórico (apenas concluídos), máscara de nome e correção do valor mínimo
 
 const API_BASE_URL = 'https://pltrem.onrender.com/api'; // Ajuste se necessário
 
@@ -16,6 +17,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const copiarPix = document.getElementById('copiarPix');
     const fecharQr = document.getElementById('fecharQr');
     const historicoList = document.getElementById('historicoList');
+
+    // Função para obter dados do usuário do localStorage (salvo no login)
+    function getUserData() {
+        const stored = localStorage.getItem('rbx_user');
+        if (!stored) return null;
+        try {
+            const data = JSON.parse(stored);
+            if (data.expiresAt && Date.now() > data.expiresAt) {
+                localStorage.removeItem('rbx_user');
+                return null;
+            }
+            return data;
+        } catch {
+            return null;
+        }
+    }
 
     // Atualiza display do slider
     function atualizarDisplay(valor) {
@@ -64,10 +81,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     }
 
+    // Função para mascarar nome (mostra primeiras 3 letras, resto *)
+    function mascararNome(nome) {
+        if (!nome) return '';
+        if (nome.length <= 3) return nome + '*'.repeat(3);
+        return nome.substring(0, 3) + '*'.repeat(nome.length - 3);
+    }
+
     // Função para carregar saldo e histórico
     async function carregarDadosUsuario() {
-        const token = localStorage.getItem('token');
-        if (!token) return;
+        const userData = getUserData();
+        if (!userData) return;
+
+        const token = userData.token;
+        const username = userData.user.username;
 
         try {
             // Buscar perfil
@@ -89,20 +116,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (historyRes.ok) {
-                const transacoes = await historyRes.json();
+                let transacoes = await historyRes.json();
+                // Filtra apenas transações com status_pagamento = 'COMPLETO'
+                transacoes = transacoes.filter(t => t.status_pagamento === 'COMPLETO');
+
                 if (historicoList) {
                     if (transacoes.length === 0) {
-                        historicoList.innerHTML = '<div class="historico-item" style="justify-content: center;">Nenhuma movimentação</div>';
+                        historicoList.innerHTML = '<div class="historico-item" style="justify-content: center;">Nenhuma movimentação concluída</div>';
                     } else {
+                        const nomeMascarado = mascararNome(username);
                         historicoList.innerHTML = transacoes.slice(0, 5).map(t => {
                             const valorFormatado = t.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                             const classe = t.tipo === 'adicao' ? 'positivo' : 'negativo';
                             const sinal = t.tipo === 'adicao' ? '+' : '-';
+                            // Usa o nome mascarado do usuário na descrição
+                            const descricao = t.descricao || (t.tipo === 'adicao' ? 'Adição de saldo' : 'Compra');
                             return `
                                 <div class="historico-item">
                                     <div class="historico-desc">
                                         <i class="fas ${t.tipo === 'adicao' ? 'fa-arrow-up' : 'fa-arrow-down'}"></i>
-                                        ${t.descricao || (t.tipo === 'adicao' ? 'Adição de saldo' : 'Compra')}
+                                        ${nomeMascarado} - ${descricao}
                                     </div>
                                     <div>
                                         <span class="historico-valor ${classe}">${sinal} ${valorFormatado}</span>
@@ -124,15 +157,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // Adicionar saldo (gerar PIX)
     btnAdicionar.addEventListener('click', async function () {
         const valor = parseFloat(slider ? slider.value : 50);
-        const token = localStorage.getItem('token');
+        const userData = getUserData();
 
-        if (!token) {
+        if (!userData) {
             mostrarFeedback('Você precisa estar logado.', 'erro');
             window.location.href = 'login.html';
             return;
         }
 
-        if (valor < 5) {
+        if (valor < 20) {
             mostrarFeedback('Valor mínimo é R$ 20,00', 'erro');
             return;
         }
@@ -146,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${userData.token}`
                 },
                 body: JSON.stringify({ valor })
             });

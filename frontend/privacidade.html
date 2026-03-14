@@ -19,25 +19,41 @@
 
     <header class="glass-header animate-fade-down">
         <div class="container header-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="logo">
                 <i class="fas fa-cube"></i> RBX<span>Store</span>
             </div>
-            <nav class="nav-menu">
-                <ul>
-                    <li><a href="inicio.html">Início</a></li>
-                    <li><a href="robux.html">Robux</a></li>
-                    <li><a href="itens.html">Itens</a></li>
-                    <li><a href="atendimento.html">Atendimento</a></li>
-                </ul>
-            </nav>
             <div class="header-actions">
-                <a href="login.html" class="btn-outline"><i class="fas fa-user"></i> Entrar</a>
                 <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
                         id="saldoDisplay">R$ 0,00</span></a>
             </div>
             <button class="mobile-toggle" id="mobileToggle"><i class="fas fa-bars"></i></button>
         </div>
     </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-cube"></i> RBX<span>Store</span>
+            </div>
+            <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="inicio.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="robux.html"><i class="fas fa-coins"></i> Robux</a></li>
+                <li><a href="itens.html"><i class="fas fa-gift"></i> Itens</a></li>
+                <li><a href="atendimento.html"><i class="fas fa-headset"></i> Atendimento</a></li>
+                <li><a href="saldo.html"><i class="fas fa-wallet"></i> Meu Saldo</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <p>&copy; 2025 RBX Store</p>
+        </div>
+    </aside>
 
     <main>
         <section class="termos-section">
@@ -55,8 +71,7 @@
                             <p>A RBX Store valoriza a privacidade dos seus usuários e está comprometida com a proteção
                                 dos dados pessoais coletados. Esta Política de Privacidade descreve como coletamos,
                                 usamos, armazenamos e compartilhamos suas informações, em conformidade com a <strong>Lei
-                                    Federal nº 13.709/2018 (Lei Geral de Proteção de Dados - LGPD)</strong>
-                                [citation:2].</p>
+                                    Federal nº 13.709/2018 (Lei Geral de Proteção de Dados - LGPD)</strong>.</p>
                             <p>Para os fins desta política, considera-se:</p>
                             <ul>
                                 <li><strong>Dado pessoal:</strong> informação relacionada a pessoa natural identificada
@@ -65,17 +80,15 @@
                                     coleta, produção, recepção, classificação, utilização, acesso, reprodução,
                                     transmissão, distribuição, processamento, arquivamento, armazenamento, eliminação,
                                     avaliação ou controle da informação, modificação, comunicação, transferência,
-                                    difusão ou extração [citation:2][citation:5].</li>
-                                <li><strong>Titular:</strong> pessoa natural a quem se referem os dados pessoais
-                                    [citation:5].</li>
+                                    difusão ou extração.</li>
+                                <li><strong>Titular:</strong> pessoa natural a quem se referem os dados pessoais.</li>
                                 <li><strong>Controlador:</strong> a RBX Store, responsável por tomar as decisões
-                                    referentes ao tratamento dos dados [citation:2].</li>
+                                    referentes ao tratamento dos dados.</li>
                                 <li><strong>Encarregado (DPO):</strong> pessoa indicada para atuar como canal de
                                     comunicação entre a empresa, os titulares e a Autoridade Nacional de Proteção de
-                                    Dados (ANPD) [citation:2].</li>
+                                    Dados (ANPD).</li>
                             </ul>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-database"></i> 2. Dados Coletados</h2>
                             <p>Podemos coletar as seguintes informações pessoais:</p>
@@ -85,15 +98,13 @@
                                 <li><strong>Dados de transação:</strong> histórico de compras, valores de saldo
                                     adicionado, itens adquiridos.</li>
                                 <li><strong>Dados de navegação:</strong> endereço IP, tipo de navegador, páginas
-                                    acessadas, data e hora do acesso [citation:3].</li>
+                                    acessadas, data e hora do acesso.</li>
                                 <li><strong>Dados de comunicação:</strong> registros de interações com nosso suporte via
                                     Discord ou formulários de contato.</li>
                             </ul>
                             <p>Coletamos apenas os dados estritamente necessários para a finalidade dos serviços
-                                prestados, respeitando o princípio da necessidade previsto no art. 6º da LGPD
-                                [citation:2].</p>
+                                prestados, respeitando o princípio da necessidade previsto no art. 6º da LGPD.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-tasks"></i> 3. Finalidade da Coleta</h2>
                             <p>Utilizamos seus dados para as seguintes finalidades:</p>
@@ -105,16 +116,15 @@
                                 <li>Enviar comunicações transacionais (confirmações de compra, atualizações de entrega);
                                 </li>
                                 <li>Cumprir obrigações legais e regulatórias;</li>
-                                <li>Prevenir fraudes e garantir a segurança da plataforma [citation:3].</li>
+                                <li>Prevenir fraudes e garantir a segurança da plataforma.</li>
                             </ul>
                             <p>Não utilizamos seus dados para finalidades incompatíveis com as aqui descritas, em
-                                observância ao princípio da finalidade (art. 6º, I da LGPD) [citation:2].</p>
+                                observância ao princípio da finalidade (art. 6º, I da LGPD).</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-balance-scale"></i> 4. Base Legal para o Tratamento (LGPD)</h2>
                             <p>O tratamento de seus dados pessoais tem como fundamento legal as seguintes hipóteses
-                                previstas na LGPD [citation:2]:</p>
+                                previstas na LGPD:</p>
                             <ul>
                                 <li><strong>Execução de contrato:</strong> para cumprir as compras realizadas e fornecer
                                     os serviços contratados (art. 7º, V);</li>
@@ -126,11 +136,9 @@
                                     com terceiros, quando aplicável (art. 7º, I).</li>
                             </ul>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-share-alt"></i> 5. Compartilhamento de Dados</h2>
-                            <p>Seus dados pessoais podem ser compartilhados nas seguintes situações
-                                [citation:3][citation:6]:</p>
+                            <p>Seus dados pessoais podem ser compartilhados nas seguintes situações:</p>
                             <ul>
                                 <li><strong>Processadores de pagamento:</strong> para processar transações via PIX
                                     (compartilhamos apenas as informações necessárias para a transação);</li>
@@ -144,12 +152,10 @@
                             <p>A RBX Store não comercializa seus dados pessoais com terceiros para fins de marketing sem
                                 seu consentimento expresso.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-cookie-bite"></i> 6. Cookies e Tecnologias de Rastreamento</h2>
                             <p>Nosso site utiliza cookies e tecnologias semelhantes para melhorar a experiência do
-                                usuário e analisar o tráfego [citation:1][citation:6]. Os cookies coletam informações
-                                como:</p>
+                                usuário e analisar o tráfego. Os cookies coletam informações como:</p>
                             <ul>
                                 <li>Preferências de navegação;</li>
                                 <li>Sessão de login;</li>
@@ -158,11 +164,9 @@
                             <p>Você pode desabilitar os cookies nas configurações do seu navegador, mas isso poderá
                                 afetar o funcionamento de algumas funcionalidades do site.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-user-lock"></i> 7. Direitos do Titular (LGPD)</h2>
-                            <p>Nos termos do art. 18 da LGPD, você tem os seguintes direitos [citation:2][citation:6]:
-                            </p>
+                            <p>Nos termos do art. 18 da LGPD, você tem os seguintes direitos:</p>
                             <ul>
                                 <li>Confirmar a existência de tratamento de seus dados;</li>
                                 <li>Acessar seus dados pessoais;</li>
@@ -178,12 +182,11 @@
                             <p>Para exercer seus direitos, entre em contato com nosso Encarregado (DPO) pelo e-mail
                                 indicado na seção 12.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-lock"></i> 8. Segurança dos Dados</h2>
                             <p>A RBX Store adota medidas técnicas e administrativas para proteger seus dados pessoais
                                 contra acessos não autorizados, situações acidentais ou ilícitas de destruição, perda,
-                                alteração, comunicação ou difusão [citation:2][citation:3]. Essas medidas incluem:</p>
+                                alteração, comunicação ou difusão. Essas medidas incluem:</p>
                             <ul>
                                 <li>Criptografia de dados sensíveis (como senhas);</li>
                                 <li>Uso de protocolos de segurança (HTTPS);</li>
@@ -192,36 +195,32 @@
                             </ul>
                             <p>Em caso de incidente de segurança que possa gerar risco ou dano relevante, notificaremos
                                 os titulares afetados e a Autoridade Nacional de Proteção de Dados, conforme exigido
-                                pela LGPD [citation:6].</p>
+                                pela LGPD.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-clock"></i> 9. Retenção e Eliminação dos Dados</h2>
                             <p>Armazenamos seus dados pessoais pelo período necessário para cumprir as finalidades
                                 descritas nesta política, a menos que um período de retenção mais longo seja exigido ou
-                                permitido por lei (como para cumprimento de obrigações fiscais) [citation:6].</p>
+                                permitido por lei (como para cumprimento de obrigações fiscais).</p>
                             <p>Quando não houver mais necessidade, os dados serão eliminados de forma segura ou
                                 anonimizados.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-child"></i> 10. Menores de Idade</h2>
                             <p>Nossos serviços são destinados a maiores de 13 anos. Não coletamos intencionalmente dados
                                 pessoais de crianças menores de 13 anos sem consentimento parental. Se você é pai/mãe ou
                                 responsável e acredita que seu filho nos forneceu dados pessoais, entre em contato
-                                conosco para que possamos tomar as providências cabíveis [citation:1][citation:8].</p>
+                                conosco para que possamos tomar as providências cabíveis.</p>
                             <p>Para usuários entre 13 e 18 anos, recomendamos que utilizem a plataforma com supervisão
                                 dos responsáveis.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-sync-alt"></i> 11. Alterações nesta Política</h2>
                             <p>Podemos atualizar esta Política de Privacidade periodicamente para refletir mudanças em
-                                nossas práticas ou por exigências legais [citation:6]. Notificaremos os usuários sobre
-                                alterações significativas por meio de aviso em nosso site ou por e-mail. Recomendamos
-                                que você revise esta política regularmente.</p>
+                                nossas práticas ou por exigências legais. Notificaremos os usuários sobre alterações
+                                significativas por meio de aviso em nosso site ou por e-mail. Recomendamos que você
+                                revise esta política regularmente.</p>
                         </div>
-
                         <div class="termos-bloco">
                             <h2><i class="fas fa-envelope"></i> 12. Contato - Encarregado (DPO)</h2>
                             <p>Caso tenha dúvidas sobre esta Política de Privacidade ou deseje exercer seus direitos
@@ -248,7 +247,9 @@
     <footer class="glass-footer animate-fade-up">
         <div class="container footer-container">
             <div class="footer-col">
-                <div class="logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i> RBX<span>Store</span>
+                </div>
                 <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-discord"></i></a>
@@ -283,7 +284,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 RBX Store. Todos os direitos reservados.</p>
+            <p>&copy; 2025 RBX Store. Todos os direitos reservados. Este site não é afiliado ao Roblox.</p>
         </div>
     </footer>
 

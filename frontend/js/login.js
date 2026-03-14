@@ -1,17 +1,15 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const API_BASE_URL = 'https://pltrem.onrender.com/api'; // URL base da API
+// login.js - Versão com armazenamento de token e dados do usuário por 7 dias
 
-    // Elementos das abas
+const API_BASE_URL = 'https://pltrem.onrender.com/api';
+
+document.addEventListener('DOMContentLoaded', function () {
     const tabLogin = document.getElementById('tabLogin');
     const tabCadastro = document.getElementById('tabCadastro');
     const formLogin = document.getElementById('loginForm');
     const formCadastro = document.getElementById('cadastroForm');
-
-    // Links para alternar entre formulários
     const switchToCadastro = document.getElementById('switchToCadastro');
     const switchToLogin = document.getElementById('switchToLogin');
 
-    // Função para trocar aba
     function setActiveTab(tab) {
         if (tab === 'login') {
             tabLogin.classList.add('active');
@@ -26,18 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Eventos das abas
     tabLogin.addEventListener('click', () => setActiveTab('login'));
     tabCadastro.addEventListener('click', () => setActiveTab('cadastro'));
 
-    // Eventos dos links
     if (switchToCadastro) {
         switchToCadastro.addEventListener('click', (e) => {
             e.preventDefault();
             setActiveTab('cadastro');
         });
     }
-
     if (switchToLogin) {
         switchToLogin.addEventListener('click', (e) => {
             e.preventDefault();
@@ -45,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ------------------- CADASTRO -------------------
+    // Cadastro
     formCadastro.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -54,7 +49,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const password = document.getElementById('cadastroPassword').value;
         const discord = document.getElementById('cadastroDiscord').value.trim();
 
-        // Validações básicas
         if (!username || !email || !password) {
             alert('Preencha todos os campos obrigatórios (*)');
             return;
@@ -68,10 +62,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Desabilitar botão para evitar envios duplicados
         const submitBtn = formCadastro.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Cadastrando...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cadastrando...';
 
         try {
             const response = await fetch(`${API_BASE_URL}/auth/register`, {
@@ -87,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 formCadastro.reset();
                 setActiveTab('login');
             } else {
-                // Exibe mensagem de erro retornada pela API
                 alert(data.error || 'Erro ao cadastrar. Tente novamente.');
             }
         } catch (error) {
@@ -95,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Erro de conexão com o servidor. Verifique sua internet.');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Cadastrar';
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Cadastrar';
         }
     });
 
-    // ------------------- LOGIN -------------------
+    // Login
     formLogin.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -113,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const submitBtn = formLogin.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Entrando...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
 
         try {
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -125,14 +117,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const data = await response.json();
 
             if (response.ok) {
-                // Salva o token JWT no localStorage
-                localStorage.setItem('token', data.token);
-                // Opcional: salvar dados do usuário
-                localStorage.setItem('user', JSON.stringify(data.user));
+                // Salva token e dados do usuário com timestamp de expiração (7 dias)
+                const now = new Date();
+                const expiresAt = now.getTime() + 7 * 24 * 60 * 60 * 1000; // 7 dias em ms
+
+                const userData = {
+                    token: data.token,
+                    user: data.user,
+                    expiresAt: expiresAt
+                };
+
+                localStorage.setItem('rbx_user', JSON.stringify(userData));
 
                 alert('Login efetuado com sucesso!');
-                // Redirecionar para a página inicial (ou painel)
-                window.location.href = 'inicio.html'; // ajuste conforme sua página inicial
+                window.location.href = 'inicio.html';
             } else {
                 alert(data.error || 'Usuário ou senha inválidos');
             }
@@ -141,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Erro de conexão com o servidor. Verifique sua internet.');
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Entrar';
+            submitBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Entrar';
         }
     });
 });
