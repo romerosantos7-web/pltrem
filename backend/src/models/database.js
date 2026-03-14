@@ -70,6 +70,7 @@ if (usePostgres) {
 
 async function initPostgres() {
     try {
+        // Tabela de usuários com campo is_admin
         await pgPool.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
@@ -80,10 +81,12 @@ async function initPostgres() {
                 saldo DECIMAL(10,2) DEFAULT 0,
                 total_adicionado DECIMAL(10,2) DEFAULT 0,
                 total_gasto DECIMAL(10,2) DEFAULT 0,
+                is_admin BOOLEAN DEFAULT FALSE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
 
+        // Tabela de transações (já existente)
         await pgPool.query(`
             CREATE TABLE IF NOT EXISTS transacoes (
                 id SERIAL PRIMARY KEY,
@@ -91,10 +94,13 @@ async function initPostgres() {
                 tipo TEXT CHECK(tipo IN ('adicao', 'compra')) NOT NULL,
                 valor DECIMAL(10,2) NOT NULL,
                 descricao TEXT,
+                misticpay_id VARCHAR(255),
+                status_pagamento VARCHAR(50) DEFAULT 'PENDENTE',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
 
+        // Criar admin se não existir (agora com is_admin = true)
         const adminUsername = 'admin';
         const adminEmail = 'admin@rbxstore.com';
         const adminPassword = 'Admin@123';
@@ -103,10 +109,10 @@ async function initPostgres() {
         if (result.rowCount === 0) {
             const hash = await bcrypt.hash(adminPassword, 10);
             await pgPool.query(
-                'INSERT INTO usuarios (username, email, senha_hash) VALUES ($1, $2, $3)',
-                [adminUsername, adminEmail, hash]
+                'INSERT INTO usuarios (username, email, senha_hash, is_admin) VALUES ($1, $2, $3, $4)',
+                [adminUsername, adminEmail, hash, true]
             );
-            console.log('Admin criado no PostgreSQL');
+            console.log('Admin criado no PostgreSQL (is_admin = true)');
         }
     } catch (err) {
         console.error('Erro ao criar tabelas no PostgreSQL:', err);
@@ -125,6 +131,7 @@ function initSqlite() {
                 saldo REAL DEFAULT 0,
                 total_adicionado REAL DEFAULT 0,
                 total_gasto REAL DEFAULT 0,
+                is_admin INTEGER DEFAULT 0,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `);
@@ -136,6 +143,8 @@ function initSqlite() {
                 tipo TEXT CHECK(tipo IN ('adicao', 'compra')) NOT NULL,
                 valor REAL NOT NULL,
                 descricao TEXT,
+                misticpay_id VARCHAR(255),
+                status_pagamento VARCHAR(50) DEFAULT 'PENDENTE',
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
             )
@@ -149,8 +158,8 @@ function initSqlite() {
             if (!row) {
                 bcrypt.hash(adminPassword, 10, (err, hash) => {
                     db.run(
-                        'INSERT INTO usuarios (username, email, senha_hash) VALUES (?, ?, ?)',
-                        [adminUsername, adminEmail, hash]
+                        'INSERT INTO usuarios (username, email, senha_hash, is_admin) VALUES (?, ?, ?, ?)',
+                        [adminUsername, adminEmail, hash, 1]
                     );
                 });
             }

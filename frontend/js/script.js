@@ -83,9 +83,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const existingLogoutSidebar = document.getElementById('logoutSidebar');
         if (existingLogoutSidebar) existingLogoutSidebar.remove();
 
+        // Remove link admin antigo se existir
+        const existingAdminLink = document.querySelector('.sidebar-nav .admin-link');
+        if (existingAdminLink) existingAdminLink.remove();
+
         if (userData) {
             const username = userData.user.username;
             const saldo = userData.user.saldo || 0;
+            const isAdmin = userData.user.is_admin || false;
             const saldoFormatado = saldo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             // Atualiza displays de saldo
@@ -150,6 +155,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             `;
             sidebarNav.appendChild(userLi);
+
+            // Se for admin, adiciona link para o painel administrativo
+            if (isAdmin) {
+                const adminLi = document.createElement('li');
+                adminLi.className = 'admin-link';
+                adminLi.innerHTML = '<a href="admin.html"><i class="fas fa-cog"></i> Admin</a>';
+                sidebarNav.appendChild(adminLi);
+            }
 
             // Adiciona botão de logout no sidebar (para mobile)
             const logoutLi = document.createElement('li');

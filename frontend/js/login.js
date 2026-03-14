@@ -118,12 +118,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (response.ok) {
                 // Salva token e dados do usuário com timestamp de expiração (7 dias)
-                const now = new Date();
-                const expiresAt = now.getTime() + 7 * 24 * 60 * 60 * 1000; // 7 dias em ms
+                const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 dias em ms
 
                 const userData = {
                     token: data.token,
-                    user: data.user,
+                    user: {
+                        id: data.user.id,
+                        username: data.user.username,
+                        email: data.user.email,
+                        saldo: data.user.saldo,
+                        is_admin: data.user.is_admin || false
+                    },
                     expiresAt: expiresAt
                 };
 

@@ -53,7 +53,8 @@ exports.login = (req, res) => {
                     id: user.id,
                     username: user.username,
                     email: user.email,
-                    saldo: user.saldo
+                    saldo: user.saldo,
+                    is_admin: user.is_admin || false
                 }
             });
         });
