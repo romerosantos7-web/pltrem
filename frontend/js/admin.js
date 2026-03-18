@@ -54,51 +54,50 @@ function getUserData() {
 
 async function carregarDashboard() {
     const userData = getUserData();
-    if (!userData || !userData.token) {
-        console.error('Dashboard: usuário não autenticado');
-        return;
-    }
+    if (!userData || !userData.token) return;
 
     try {
-        console.log('Fazendo requisição para /admin/stats com token:', userData.token.substring(0, 10) + '...');
         const response = await fetch(`${API_BASE_URL}/admin/stats`, {
             headers: { 'Authorization': `Bearer ${userData.token}` }
         });
-
-        console.log('Dashboard - Status:', response.status);
-        const contentType = response.headers.get('content-type');
-        console.log('Dashboard - Content-Type:', contentType);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Dashboard - Erro resposta:', errorText.substring(0, 200));
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        if (!contentType || !contentType.includes('application/json')) {
-            const text = await response.text();
-            console.error('Dashboard - Resposta não é JSON:', text.substring(0, 200));
-            throw new Error('Resposta inválida do servidor');
-        }
-
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        console.log('Dashboard - Dados recebidos:', data);
 
-        document.getElementById('misticpayBalance').textContent =
-            `R$ ${Number(data.misticpay_balance || 0).toFixed(2)}`;
-        document.getElementById('totalAdicionado').textContent =
-            `R$ ${Number(data.total_adicionado || 0).toFixed(2)}`;
-        document.getElementById('totalGasto').textContent =
-            `R$ ${Number(data.total_gasto || 0).toFixed(2)}`;
-        document.getElementById('totalTransacoes').textContent = data.total_transacoes || 0;
-        document.getElementById('totalUsuarios').textContent = data.total_usuarios || 0;
-        document.getElementById('totalCompras').textContent = data.total_compras || 0;
-
+        const container = document.getElementById('statsContainer');
+        container.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                <div class="stat-label">Saldo MisticPay</div>
+                <div class="stat-value">R$ ${Number(data.misticpay_balance || 0).toFixed(2)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-arrow-up"></i></div>
+                <div class="stat-label">Total Adicionado</div>
+                <div class="stat-value">R$ ${Number(data.total_adicionado || 0).toFixed(2)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-arrow-down"></i></div>
+                <div class="stat-label">Total Gasto</div>
+                <div class="stat-value">R$ ${Number(data.total_gasto || 0).toFixed(2)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+                <div class="stat-label">Total Transações</div>
+                <div class="stat-value">${data.total_transacoes || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-label">Total Usuários</div>
+                <div class="stat-value">${data.total_usuarios || 0}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="stat-label">Total Compras</div>
+                <div class="stat-value">${data.total_compras || 0}</div>
+            </div>
+        `;
     } catch (error) {
         console.error('Erro ao carregar dashboard:', error);
-        document.querySelectorAll('#statsContainer .stat-value').forEach(el => {
-            el.textContent = 'Erro';
-        });
     }
 }
 
@@ -113,13 +112,10 @@ async function carregarUsuarios(page) {
         const response = await fetch(`${API_BASE_URL}/admin/users?page=${page}`, {
             headers: { 'Authorization': `Bearer ${userData.token}` }
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        let html = '<table class="admin-table"><thead><tr><th>ID</th><th>Usuário</th><th>Email</th><th>Discord</th><th>Saldo</th><th>Total Adic.</th><th>Total Gasto</th><th>Admin</th></tr></thead><tbody>';
+
+        let html = '<table class="admin-table"><thead><tr><th>ID</th><th>Usuário</th><th>Email</th><th>Discord</th><th>Saldo</th><th>Adic.</th><th>Gasto</th><th>Admin</th><th>Ações</th></tr></thead><tbody>';
         data.users.forEach(user => {
             html += `<tr>
                 <td>${user.id}</td>
@@ -129,7 +125,19 @@ async function carregarUsuarios(page) {
                 <td>R$ ${Number(user.saldo).toFixed(2)}</td>
                 <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
                 <td>R$ ${Number(user.total_gasto).toFixed(2)}</td>
-                <td>${user.is_admin ? 'Sim' : 'Não'}</td>
+                <td>${user.is_admin ? '<span style="color:#ec4899;">Sim</span>' : 'Não'}</td>
+                <td>
+                    <div class="user-actions">
+                        <button class="btn-icon" onclick="toggleActions(${user.id})"><i class="fas fa-cog"></i></button>
+                        <div class="actions-menu" id="menu-${user.id}">
+                            <a href="#" onclick="excluirUsuario(${user.id}, '${user.username}')"><i class="fas fa-trash-alt"></i> Excluir</a>
+                            <a href="#" onclick="mudarSenha(${user.id}, '${user.username}')"><i class="fas fa-key"></i> Mudar senha</a>
+                            <a href="#" onclick="adicionarSaldo(${user.id}, '${user.username}')"><i class="fas fa-plus-circle"></i> Adicionar saldo</a>
+                            <a href="#" onclick="removerSaldo(${user.id}, '${user.username}')"><i class="fas fa-minus-circle"></i> Remover saldo</a>
+                            <a href="#" onclick="tornarAdmin(${user.id}, '${user.username}', ${user.is_admin})"><i class="fas fa-user-cog"></i> ${user.is_admin ? 'Remover admin' : 'Tornar admin'}</a>
+                        </div>
+                    </div>
+                </td>
             </tr>`;
         });
         html += '</tbody></table>';
@@ -140,17 +148,62 @@ async function carregarUsuarios(page) {
         for (let i = 1; i <= data.totalPages; i++) {
             const btn = document.createElement('button');
             btn.textContent = i;
-            btn.style.cssText = 'background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 8px 12px; border-radius: 20px; cursor: pointer;';
-            if (i === page) btn.style.background = 'var(--secondary)';
+            if (i === page) btn.classList.add('active');
             btn.addEventListener('click', () => carregarUsuarios(i));
             pagination.appendChild(btn);
         }
     } catch (error) {
-        console.error('Erro ao carregar usuários:', error);
         container.innerHTML = '<p style="text-align: center; color: #f56565;">Erro ao carregar usuários</p>';
     }
 }
 
+// Funções para gerenciar o menu de ações
+window.toggleActions = function (userId) {
+    const menu = document.getElementById(`menu-${userId}`);
+    if (menu) {
+        menu.classList.toggle('show');
+        // Fechar outros menus abertos
+        document.querySelectorAll('.actions-menu').forEach(m => {
+            if (m.id !== `menu-${userId}`) m.classList.remove('show');
+        });
+    }
+};
+
+// Fechar menus ao clicar fora
+document.addEventListener('click', function (event) {
+    if (!event.target.closest('.user-actions')) {
+        document.querySelectorAll('.actions-menu').forEach(m => m.classList.remove('show'));
+    }
+});
+
+// Placeholders para as ações (você implementará a lógica depois)
+window.excluirUsuario = function (id, username) {
+    alert(`Excluir usuário ${username} (ID ${id}) - implementar`);
+};
+
+window.mudarSenha = function (id, username) {
+    const novaSenha = prompt(`Nova senha para ${username}:`);
+    if (novaSenha) alert(`Senha alterada para ${username} - implementar`);
+};
+
+window.adicionarSaldo = function (id, username) {
+    const valor = prompt(`Valor a adicionar para ${username}:`);
+    if (valor) alert(`Adicionar R$ ${valor} para ${username} - implementar`);
+};
+
+window.removerSaldo = function (id, username) {
+    const valor = prompt(`Valor a remover de ${username}:`);
+    if (valor) alert(`Remover R$ ${valor} de ${username} - implementar`);
+};
+
+window.tornarAdmin = function (id, username, isAdmin) {
+    const acao = isAdmin ? 'remover admin' : 'tornar admin';
+    if (confirm(`Deseja ${acao} ${username}?`)) {
+        alert(`${acao} para ${username} - implementar`);
+    }
+};
+
+// Ranking
 async function carregarRanking() {
     const userData = getUserData();
     if (!userData || !userData.token) return;
@@ -162,29 +215,26 @@ async function carregarRanking() {
         const response = await fetch(`${API_BASE_URL}/admin/ranking?limit=10`, {
             headers: { 'Authorization': `Bearer ${userData.token}` }
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
+
         let html = '<table class="admin-table"><thead><tr><th>#</th><th>Usuário</th><th>Total Adicionado</th><th>Transações</th></tr></thead><tbody>';
         data.forEach((user, index) => {
             html += `<tr>
                 <td>${index + 1}</td>
                 <td>${user.username}</td>
-                <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
+                <td><span style="color:#48bb78; font-weight:600;">R$ ${Number(user.total_adicionado).toFixed(2)}</span></td>
                 <td>${user.total_transacoes}</td>
             </tr>`;
         });
         html += '</tbody></table>';
         container.innerHTML = html;
     } catch (error) {
-        console.error('Erro ao carregar ranking:', error);
         container.innerHTML = '<p style="text-align: center; color: #f56565;">Erro ao carregar ranking</p>';
     }
 }
 
+// Saque
 async function realizarSaque() {
     const userData = getUserData();
     if (!userData || !userData.token) {
@@ -209,7 +259,7 @@ async function realizarSaque() {
 
     const btn = document.getElementById('btnWithdraw');
     btn.disabled = true;
-    btn.textContent = 'Processando...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
     feedback.innerHTML = '';
 
     try {
@@ -224,18 +274,17 @@ async function realizarSaque() {
 
         const data = await response.json();
         if (response.ok) {
-            feedback.innerHTML = '<div class="feedback-success">Saque realizado com sucesso!</div>';
+            feedback.innerHTML = '<div class="feedback-success"><i class="fas fa-check-circle"></i> Saque realizado com sucesso!</div>';
             document.getElementById('withdrawAmount').value = '';
             document.getElementById('pixKey').value = '';
             carregarDashboard();
         } else {
-            feedback.innerHTML = `<div class="feedback-error">${data.error || 'Erro ao sacar'}</div>`;
+            feedback.innerHTML = `<div class="feedback-error"><i class="fas fa-exclamation-circle"></i> ${data.error || 'Erro ao sacar'}</div>`;
         }
     } catch (error) {
-        console.error('Erro no saque:', error);
         feedback.innerHTML = '<div class="feedback-error">Erro de conexão</div>';
     } finally {
         btn.disabled = false;
-        btn.textContent = 'Realizar Saque';
+        btn.innerHTML = '<i class="fas fa-bolt"></i> Realizar Saque';
     }
 }
