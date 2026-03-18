@@ -1,62 +1,55 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const db = require('../models/database');
-require('dotenv').config();
 
-exports.register = (req, res) => {
-    const { username, email, password, discord } = req.body;
+// Listar usuários com paginação
+exports.listUsers = (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
 
-    if (!username || !email || !password) {
-        return res.status(400).json({ error: 'Campos obrigatórios: username, email, password' });
-    }
+    db.all(
+        'SELECT id, username, email, discord, saldo, total_adicionado, total_gasto, is_admin, created_at FROM usuarios ORDER BY id LIMIT $1 OFFSET $2',
+        [limit, offset],
+        (err, users) => {
+            if (err) {
+                console.error('Erro ao listar usuários:', err);
+                return res.status(500).json({ error: 'Erro no banco de dados' });
+            }
 
-    bcrypt.hash(password, 10, (err, hash) => {
-        if (err) return res.status(500).json({ error: 'Erro ao criar senha' });
-
-        db.run(
-            `INSERT INTO usuarios (username, email, senha_hash, discord) VALUES ($1, $2, $3, $4) RETURNING id`,
-            [username, email, hash, discord || null],
-            function (err) {
-                if (err) {
-                    if (err.message.includes('UNIQUE') || err.constraint === 'usuarios_username_key') {
-                        return res.status(409).json({ error: 'Usuário ou e-mail já existe' });
-                    }
-                    console.error('Erro no INSERT:', err);
+            db.get('SELECT COUNT(*) as total FROM usuarios', [], (err2, count) => {
+                if (err2) {
+                    console.error('Erro ao contar usuários:', err2);
                     return res.status(500).json({ error: 'Erro no banco de dados' });
                 }
-                res.status(201).json({ message: 'Usuário criado com sucesso', id: this.lastID });
-            }
-        );
-    });
+
+                res.json({
+                    users,
+                    total: count.total,
+                    page,
+                    totalPages: Math.ceil(count.total / limit)
+                });
+            });
+        }
+    );
 };
 
-exports.login = (req, res) => {
-    const { username, password } = req.body;
+// Ver transações de um usuário específico
+exports.getUserTransactions = (req, res) => {
+    const userId = req.params.userId;
 
-    db.get('SELECT * FROM usuarios WHERE username = $1', [username], (err, user) => {
-        if (err) return res.status(500).json({ error: 'Erro no banco' });
-        if (!user) return res.status(401).json({ error: 'Credenciais inválidas' });
+    if (!userId || isNaN(userId)) {
+        return res.status(400).json({ error: 'ID de usuário inválido' });
+    }
 
-        bcrypt.compare(password, user.senha_hash, (err, match) => {
-            if (err) return res.status(500).json({ error: 'Erro ao verificar senha' });
-            if (!match) return res.status(401).json({ error: 'Credenciais inválidas' });
+    db.all(
+        'SELECT * FROM transacoes WHERE usuario_id = $1 ORDER BY created_at DESC',
+        [userId],
+        (err, transactions) => {
+            if (err) {
+                console.error('Erro ao buscar transações:', err);
+                return res.status(500).json({ error: 'Erro no banco de dados' });
+            }
 
-            const token = jwt.sign(
-                { id: user.id, username: user.username },
-                process.env.JWT_SECRET,
-                { expiresIn: '7d' }
-            );
-
-            res.json({
-                token,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    email: user.email,
-                    saldo: user.saldo,
-                    is_admin: user.is_admin || false
-                }
-            });
-        });
-    });
+            res.json(transactions);
+        }
+    );
 };
