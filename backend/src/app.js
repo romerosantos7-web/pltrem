@@ -6,8 +6,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
-const adminRoutes = require('./routes/adminRoutes'); // já existente (lista usuários)
-const adminDashboardRoutes = require('./routes/adminDashboardRoutes'); // NOVO
+const adminRoutes = require('./routes/adminRoutes'); // rotas antigas (listar usuários)
+const adminDashboardRoutes = require('./routes/adminDashboardRoutes'); // <-- NOVA LINHA
 
 const app = express();
 
