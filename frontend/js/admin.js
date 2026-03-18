@@ -1,5 +1,6 @@
 const API_BASE_URL = 'https://pltrem.onrender.com/api';
 let currentUserPage = 1;
+let currentUserId = null; // para o modal
 
 document.addEventListener('DOMContentLoaded', function () {
     const userData = getUserData();
@@ -33,7 +34,24 @@ document.addEventListener('DOMContentLoaded', function () {
     carregarUsuarios(currentUserPage);
     carregarRanking();
 
+    // Seletor customizado de tipo PIX
+    document.querySelectorAll('.pix-type-option').forEach(opt => {
+        opt.addEventListener('click', function () {
+            document.querySelectorAll('.pix-type-option').forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+            document.getElementById('pixKeyType').value = this.dataset.value;
+        });
+    });
+
     document.getElementById('btnWithdraw').addEventListener('click', realizarSaque);
+
+    // Modal
+    const modal = document.getElementById('userActionModal');
+    const closeModal = document.getElementById('closeModal');
+    closeModal.addEventListener('click', () => modal.classList.remove('active'));
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
 });
 
 function getUserData() {
@@ -60,26 +78,18 @@ async function carregarDashboard() {
         const response = await fetch(`${API_BASE_URL}/admin/stats`, {
             headers: { 'Authorization': `Bearer ${userData.token}` }
         });
-
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
         const data = await response.json();
 
-        document.getElementById('misticpayBalance').textContent =
-            `R$ ${Number(data.misticpay_balance || 0).toFixed(2)}`;
-        document.getElementById('totalAdicionado').textContent =
-            `R$ ${Number(data.total_adicionado || 0).toFixed(2)}`;
-        document.getElementById('totalGasto').textContent =
-            `R$ ${Number(data.total_gasto || 0).toFixed(2)}`;
+        document.getElementById('misticpayBalance').textContent = `R$ ${Number(data.misticpay_balance || 0).toFixed(2)}`;
+        document.getElementById('totalAdicionado').textContent = `R$ ${Number(data.total_adicionado || 0).toFixed(2)}`;
+        document.getElementById('totalGasto').textContent = `R$ ${Number(data.total_gasto || 0).toFixed(2)}`;
         document.getElementById('totalTransacoes').textContent = data.total_transacoes || 0;
         document.getElementById('totalUsuarios').textContent = data.total_usuarios || 0;
         document.getElementById('totalCompras').textContent = data.total_compras || 0;
-
     } catch (error) {
         console.error('Erro dashboard:', error);
-        document.querySelectorAll('#statsContainer .stat-value').forEach(el => {
-            el.textContent = 'Erro';
-        });
+        document.querySelectorAll('#statsContainer .stat-value').forEach(el => el.textContent = 'Erro');
     }
 }
 
@@ -109,20 +119,7 @@ async function carregarUsuarios(page) {
                 <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
                 <td>R$ ${Number(user.total_gasto).toFixed(2)}</td>
                 <td>${user.is_admin ? 'Sim' : 'Não'}</td>
-                <td>
-                    <div class="dropdown">
-                        <button class="action-btn dropdown-btn" data-id="${user.id}">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                        <div class="dropdown-content" id="dropdown-${user.id}">
-                            <a href="#" onclick="acoesUsuario('excluir', ${user.id})"><i class="fas fa-trash"></i> Excluir</a>
-                            <a href="#" onclick="acoesUsuario('senha', ${user.id})"><i class="fas fa-key"></i> Mudar senha</a>
-                            <a href="#" onclick="acoesUsuario('addSaldo', ${user.id})"><i class="fas fa-plus-circle"></i> Adicionar saldo</a>
-                            <a href="#" onclick="acoesUsuario('removeSaldo', ${user.id})"><i class="fas fa-minus-circle"></i> Remover saldo</a>
-                            <a href="#" onclick="acoesUsuario('tornarAdmin', ${user.id})"><i class="fas fa-crown"></i> Tornar admin</a>
-                        </div>
-                    </div>
-                </td>
+                <td><button class="action-btn" onclick="abrirModalAcoes(${user.id})"><i class="fas fa-cog"></i></button></td>
             </tr>`;
         });
         tbody.innerHTML = html;
@@ -137,32 +134,35 @@ async function carregarUsuarios(page) {
             btn.addEventListener('click', () => carregarUsuarios(i));
             pagination.appendChild(btn);
         }
-
-        // Ativar dropdowns
-        document.querySelectorAll('.dropdown-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const dropdown = document.getElementById(`dropdown-${btn.dataset.id}`);
-                dropdown.classList.toggle('show');
-            });
-        });
-
-        // Fechar dropdown ao clicar fora
-        window.addEventListener('click', () => {
-            document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
-        });
-
     } catch (error) {
         console.error('Erro usuários:', error);
         tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#f56565;">Erro ao carregar</td></tr>';
     }
 }
 
-// Função simulada para ações do usuário (substituir por chamadas reais à API)
-window.acoesUsuario = (acao, userId) => {
-    // Fecha dropdown
-    document.querySelectorAll('.dropdown-content').forEach(d => d.classList.remove('show'));
+// ========== MODAL DE AÇÕES ==========
+function abrirModalAcoes(userId) {
+    currentUserId = userId;
+    const modal = document.getElementById('userActionModal');
+    const container = document.getElementById('modalActionContainer');
+    const acoes = [
+        { icone: 'fa-trash', texto: 'Excluir usuário', acao: 'excluir' },
+        { icone: 'fa-key', texto: 'Mudar senha', acao: 'senha' },
+        { icone: 'fa-plus-circle', texto: 'Adicionar saldo', acao: 'addSaldo' },
+        { icone: 'fa-minus-circle', texto: 'Remover saldo', acao: 'removeSaldo' },
+        { icone: 'fa-crown', texto: 'Tornar admin', acao: 'tornarAdmin' }
+    ];
+    container.innerHTML = acoes.map(a => `
+        <div class="modal-action" onclick="executarAcao('${a.acao}', ${userId})">
+            <i class="fas ${a.icone}"></i>
+            <span>${a.texto}</span>
+        </div>
+    `).join('');
+    modal.classList.add('active');
+}
 
+window.executarAcao = (acao, userId) => {
+    document.getElementById('userActionModal').classList.remove('active');
     const acoes = {
         excluir: 'Excluir usuário',
         senha: 'Mudar senha',
@@ -238,13 +238,12 @@ async function realizarSaque() {
             },
             body: JSON.stringify({ amount, pixKey, pixKeyType, description })
         });
-
         const data = await response.json();
         if (response.ok) {
             feedback.innerHTML = '<div class="feedback-success">Saque realizado com sucesso!</div>';
             document.getElementById('withdrawAmount').value = '';
             document.getElementById('pixKey').value = '';
-            carregarDashboard(); // atualiza saldo
+            carregarDashboard();
         } else {
             feedback.innerHTML = `<div class="feedback-error">${data.error || 'Erro ao sacar'}</div>`;
         }

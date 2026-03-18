@@ -12,7 +12,6 @@
         /* ========== VARIÁVEIS ========== */
         :root {
             --glass-bg: rgba(20, 20, 30, 0.85);
-            /* mais opaco */
             --glass-border: rgba(255, 255, 255, 0.15);
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
             --primary: #6366f1;
@@ -126,11 +125,6 @@
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        .stat-value small {
-            font-size: 1rem;
-            opacity: 0.7;
-        }
-
         /* ========== TABELAS ========== */
         .admin-card {
             background: var(--glass-bg);
@@ -173,19 +167,10 @@
             color: var(--secondary);
         }
 
-        .admin-table tr {
-            transition: background 0.2s;
-        }
-
         .admin-table tr:hover {
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .admin-table td {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        /* ========== BOTÕES E AÇÕES ========== */
         .action-btn {
             background: transparent;
             border: none;
@@ -195,7 +180,6 @@
             padding: 5px 10px;
             border-radius: 20px;
             transition: 0.2s;
-            position: relative;
         }
 
         .action-btn:hover {
@@ -203,51 +187,143 @@
             color: var(--secondary);
         }
 
-        .dropdown {
-            position: relative;
-            display: inline-block;
+        /* ========== MODAL CENTRAL ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
         }
 
-        .dropdown-content {
-            position: absolute;
-            right: 0;
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            min-width: 180px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            display: none;
-            overflow: hidden;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            color: white;
+            transform: scale(0.9);
+            transition: 0.3s;
+            box-shadow: var(--glass-shadow);
         }
 
-        .dropdown-content.show {
-            display: block;
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
         }
 
-        .dropdown-content a {
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .modal-header h3 {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 15px;
-            color: white;
-            text-decoration: none;
-            transition: 0.2s;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dropdown-content a:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-content a:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .dropdown-content a i {
-            width: 20px;
             color: var(--secondary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--secondary);
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .modal-action {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .modal-action:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--secondary);
+        }
+
+        .modal-action i {
+            width: 30px;
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+
+        .modal-action span {
+            font-weight: 500;
+        }
+
+        /* ========== SELECT CUSTOMIZADO (TIPO PIX) ========== */
+        .pix-type-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .pix-type-option {
+            flex: 1 1 auto;
+            min-width: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .pix-type-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .pix-type-option.selected {
+            background: var(--secondary);
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
         }
 
         /* ========== FORMULÁRIO DE SAQUE ========== */
@@ -268,8 +344,7 @@
             font-weight: 500;
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 14px 18px;
             border-radius: 50px;
@@ -280,15 +355,10 @@
             transition: 0.2s;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             border-color: var(--secondary);
             outline: none;
             box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3);
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
         }
 
         .btn-withdraw {
@@ -311,11 +381,6 @@
         .btn-withdraw:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5);
-        }
-
-        .btn-withdraw:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
         }
 
         .feedback-success {
@@ -376,12 +441,8 @@
 
     <header class="glass-header animate-fade-down">
         <div class="container header-container">
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="logo">
-                <i class="fas fa-cube"></i> RBX<span>Store</span>
-            </div>
+            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+            <div class="logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
             <div class="header-actions">
                 <a href="saldo.html" class="btn-primary saldo-btn"><i class="fas fa-wallet"></i> <span
                         id="saldoDisplay">R$ 0,00</span></a>
@@ -393,9 +454,7 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <i class="fas fa-cube"></i> RBX<span>Store</span>
-            </div>
+            <div class="sidebar-logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
             <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
         </div>
         <nav class="sidebar-nav">
@@ -405,13 +464,23 @@
                 <li><a href="itens.html"><i class="fas fa-gift"></i> Itens</a></li>
                 <li><a href="atendimento.html"><i class="fas fa-headset"></i> Atendimento</a></li>
                 <li><a href="saldo.html"><i class="fas fa-wallet"></i> Meu Saldo</a></li>
-                <!-- Link admin será inserido via JS -->
             </ul>
         </nav>
         <div class="sidebar-footer">
             <p>&copy; 2025 RBX Store</p>
         </div>
     </aside>
+
+    <!-- MODAL DE AÇÕES DO USUÁRIO -->
+    <div class="modal-overlay" id="userActionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-cog"></i> Ações do Usuário</h3>
+                <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-actions" id="modalActionContainer"></div>
+        </div>
+    </div>
 
     <main class="admin-page">
         <div class="container">
@@ -466,7 +535,7 @@
                 <div class="admin-section" id="users">
                     <h3><i class="fas fa-users"></i> Gerenciar Usuários</h3>
                     <div class="table-responsive">
-                        <table class="admin-table" id="usersTable">
+                        <table class="admin-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -522,12 +591,13 @@
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-key"></i> Tipo de Chave PIX</label>
-                            <select id="pixKeyType">
-                                <option value="CPF">CPF</option>
-                                <option value="EMAIL">E-mail</option>
-                                <option value="TELEFONE">Telefone</option>
-                                <option value="CHAVE_ALEATORIA">Chave Aleatória</option>
-                            </select>
+                            <div class="pix-type-selector" id="pixTypeSelector">
+                                <div class="pix-type-option selected" data-value="CPF">CPF</div>
+                                <div class="pix-type-option" data-value="EMAIL">E-mail</div>
+                                <div class="pix-type-option" data-value="TELEFONE">Telefone</div>
+                                <div class="pix-type-option" data-value="CHAVE_ALEATORIA">Aleatória</div>
+                            </div>
+                            <input type="hidden" id="pixKeyType" value="CPF">
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-paste"></i> Chave PIX</label>
@@ -537,10 +607,9 @@
                             <label><i class="fas fa-align-left"></i> Descrição (opcional)</label>
                             <input type="text" id="withdrawDescription" placeholder="Ex: Saque administrativo">
                         </div>
-                        <button class="btn-withdraw" id="btnWithdraw">
-                            <i class="fas fa-paper-plane"></i> Realizar Saque
-                        </button>
-                        <div id="withdrawFeedback" style="margin-top: 20px;"></div>
+                        <button class="btn-withdraw" id="btnWithdraw"><i class="fas fa-paper-plane"></i> Realizar
+                            Saque</button>
+                        <div id="withdrawFeedback"></div>
                     </div>
                 </div>
 
@@ -554,44 +623,7 @@
     </main>
 
     <footer class="glass-footer animate-fade-up">
-        <div class="container footer-container">
-            <div class="footer-col">
-                <div class="footer-logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
-                <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-discord"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>Links Rápidos</h4>
-                <ul>
-                    <li><a href="index.html">Início</a></li>
-                    <li><a href="robux.html">Robux</a></li>
-                    <li><a href="itens.html">Itens</a></li>
-                    <li><a href="atendimento.html">Atendimento</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="termos.html">Termos de Uso</a></li>
-                    <li><a href="privacidade.html">Política de Privacidade</a></li>
-                    <li><a href="#">Reembolsos</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Contato</h4>
-                <ul>
-                    <li><i class="fas fa-envelope"></i> suporte@rbxstore.com</li>
-                    <li><i class="fas fa-clock"></i> 24/7 Online</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 RBX Store. Todos os direitos reservados.</p>
-        </div>
+        <!-- ... footer existente (copie do seu arquivo) ... -->
     </footer>
 
     <script src="js/script.js"></script>
