@@ -1,6 +1,6 @@
 const API_BASE_URL = 'https://pltrem.onrender.com/api';
 let currentUserPage = 1;
-let currentUserId = null; // para o modal
+let currentUserId = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     const userData = getUserData();
@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    // Tabs
     const tabs = document.querySelectorAll('.admin-tab');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
@@ -34,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
     carregarUsuarios(currentUserPage);
     carregarRanking();
 
-    // Seletor customizado de tipo PIX
+    // Seletor PIX
     document.querySelectorAll('.pix-type-option').forEach(opt => {
         opt.addEventListener('click', function () {
             document.querySelectorAll('.pix-type-option').forEach(o => o.classList.remove('selected'));
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Modal
     const modal = document.getElementById('userActionModal');
     const closeModal = document.getElementById('closeModal');
-    closeModal.addEventListener('click', () => modal.classList.remove('active'));
+    if (closeModal) closeModal.addEventListener('click', () => modal.classList.remove('active'));
     window.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
@@ -124,7 +123,6 @@ async function carregarUsuarios(page) {
         });
         tbody.innerHTML = html;
 
-        // Paginação
         const pagination = document.getElementById('userPagination');
         pagination.innerHTML = '';
         for (let i = 1; i <= data.totalPages; i++) {
@@ -161,16 +159,84 @@ function abrirModalAcoes(userId) {
     modal.classList.add('active');
 }
 
-window.executarAcao = (acao, userId) => {
+// ========== EXECUÇÃO DAS AÇÕES ==========
+window.executarAcao = async (acao, userId) => {
     document.getElementById('userActionModal').classList.remove('active');
-    const acoes = {
-        excluir: 'Excluir usuário',
-        senha: 'Mudar senha',
-        addSaldo: 'Adicionar saldo',
-        removeSaldo: 'Remover saldo',
-        tornarAdmin: 'Tornar admin'
-    };
-    alert(`[Simulação] ${acoes[acao]} do usuário ID ${userId}. Implemente a chamada à API.`);
+    const userData = getUserData();
+    if (!userData || !userData.token) return;
+
+    let url = `${API_BASE_URL}/admin/users/${userId}`;
+    let method = 'DELETE';
+    let body = null;
+    let mensagem = '';
+
+    switch (acao) {
+        case 'excluir':
+            if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+            method = 'DELETE';
+            url = `${API_BASE_URL}/admin/users/${userId}`;
+            break;
+        case 'senha':
+            const novaSenha = prompt('Digite a nova senha (mínimo 6 caracteres):');
+            if (!novaSenha || novaSenha.length < 6) {
+                alert('Senha inválida ou muito curta');
+                return;
+            }
+            method = 'PUT';
+            url = `${API_BASE_URL}/admin/users/${userId}/password`;
+            body = { newPassword: novaSenha };
+            break;
+        case 'addSaldo':
+            const valorAdd = parseFloat(prompt('Digite o valor a adicionar (R$):'));
+            if (isNaN(valorAdd) || valorAdd <= 0) {
+                alert('Valor inválido');
+                return;
+            }
+            method = 'PUT';
+            url = `${API_BASE_URL}/admin/users/${userId}/add-balance`;
+            body = { amount: valorAdd };
+            break;
+        case 'removeSaldo':
+            const valorRem = parseFloat(prompt('Digite o valor a remover (R$):'));
+            if (isNaN(valorRem) || valorRem <= 0) {
+                alert('Valor inválido');
+                return;
+            }
+            method = 'PUT';
+            url = `${API_BASE_URL}/admin/users/${userId}/remove-balance`;
+            body = { amount: valorRem };
+            break;
+        case 'tornarAdmin':
+            const tornarAdmin = confirm('Deseja tornar este usuário administrador?');
+            method = 'PUT';
+            url = `${API_BASE_URL}/admin/users/${userId}/toggle-admin`;
+            body = { is_admin: tornarAdmin };
+            break;
+        default:
+            return;
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${userData.token}`
+            },
+            body: body ? JSON.stringify(body) : undefined
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert(data.message || 'Ação realizada com sucesso!');
+            carregarUsuarios(currentUserPage); // recarrega a lista
+            carregarDashboard(); // atualiza totais
+        } else {
+            alert('Erro: ' + (data.error || 'Erro desconhecido'));
+        }
+    } catch (error) {
+        console.error('Erro na ação:', error);
+        alert('Erro de conexão com o servidor');
+    }
 };
 
 // ========== RANKING ==========
