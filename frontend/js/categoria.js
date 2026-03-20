@@ -88,12 +88,16 @@ async function carregarCategoria(slug) {
             <div class="produtos-grid">
         `;
 
-        if (produtos.length === 0) {
+        if (!produtos || produtos.length === 0) {
             html += '<p style="text-align:center; width:100%;">Nenhum produto disponível nesta categoria.</p>';
         } else {
             produtos.forEach(prod => {
-                const precoFormatado = prod.preco.toFixed(2).replace('.', ',');
-                const precoAntigoFormatado = prod.preco_antigo ? prod.preco_antigo.toFixed(2).replace('.', ',') : null;
+                // Garantir que preço seja número
+                const preco = parseFloat(prod.preco) || 0;
+                const precoAntigo = prod.preco_antigo ? parseFloat(prod.preco_antigo) : null;
+
+                const precoFormatado = preco.toFixed(2).replace('.', ',');
+                const precoAntigoFormatado = precoAntigo ? precoAntigo.toFixed(2).replace('.', ',') : null;
                 const icone = prod.icone || 'fa-box';
 
                 html += `
@@ -104,7 +108,7 @@ async function carregarCategoria(slug) {
                             ${precoAntigoFormatado ? `<small>R$ ${precoAntigoFormatado}</small>` : ''}
                         </div>
                         <div class="produto-info">${prod.info || ''}</div>
-                        <a href="checkout.html?produto=${encodeURIComponent(prod.nome)}&preco=${prod.preco}&categoria=${categoria.slug}" class="btn-checkout">
+                        <a href="checkout.html?produto=${encodeURIComponent(prod.nome)}&preco=${preco}&categoria=${categoria.slug}" class="btn-checkout">
                             <i class="fas fa-shopping-cart"></i> Comprar
                         </a>
                     </div>
