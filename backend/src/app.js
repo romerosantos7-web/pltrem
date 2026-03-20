@@ -6,14 +6,9 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
-const adminRoutes = require('./routes/adminRoutes'); // rotas antigas (listar usuários)
-const adminDashboardRoutes = require('./routes/adminDashboardRoutes'); // <-- NOVA LINHA
-const adminCategoriasRoutes = require('./routes/adminCategoriasRoutes');
-const categoriasRoutes = require('./routes/categoriasRoutes');
+const adminRoutes = require('./routes/adminRoutes'); // <-- TODAS as rotas admin em um único arquivo
 const publicRoutes = require('./routes/publicRoutes');
-const adminCategoriaRoutes = require('./routes/adminCategoriaRoutes');
-const adminProdutoRoutes = require('./routes/adminProdutoRoutes');
-
+const categoriasRoutes = require('./routes/categoriasRoutes'); // rotas públicas de categorias
 
 const app = express();
 
@@ -24,13 +19,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/pagamentos', pagamentoRoutes);
-app.use('/api/admin', adminRoutes); // /api/admin/users, /api/admin/users/:userId/transactions
-app.use('/api/admin', adminDashboardRoutes); // /api/admin/stats, /api/admin/ranking, /api/admin/withdraw
-app.use('/api/admin', adminCategoriasRoutes); // já tem auth/admin middleware
+app.use('/api/admin', adminRoutes); // /api/admin/* (stats, users, categorias, produtos, withdraw, etc.)
+app.use('/api/public', publicRoutes);
 app.use('/api/categorias', categoriasRoutes); // público
-app.use('/api/public', publicRoutes); // rotas abertas (sem auth)
-app.use('/api/admin/categorias', adminCategoriaRoutes);
-app.use('/api/admin/produtos', adminProdutoRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'API da RBX Store funcionando!' });
