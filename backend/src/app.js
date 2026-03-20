@@ -6,9 +6,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const pagamentoRoutes = require('./routes/pagamentoRoutes');
-const adminRoutes = require('./routes/adminRoutes'); // <-- TODAS as rotas admin em um único arquivo
-const publicRoutes = require('./routes/publicRoutes');
-const categoriasRoutes = require('./routes/categoriasRoutes'); // rotas públicas de categorias
+const adminRoutes = require('./routes/adminRoutes'); // <-- ÚNICO arquivo admin
+const categoriasRoutes = require('./routes/categoriasRoutes'); // público
 
 const app = express();
 
@@ -19,8 +18,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/pagamentos', pagamentoRoutes);
-app.use('/api/admin', adminRoutes); // /api/admin/* (stats, users, categorias, produtos, withdraw, etc.)
-app.use('/api/public', publicRoutes);
+app.use('/api/admin', adminRoutes); // /api/admin/* (stats, users, categorias, produtos, withdraw)
 app.use('/api/categorias', categoriasRoutes); // público
 
 app.get('/', (req, res) => {

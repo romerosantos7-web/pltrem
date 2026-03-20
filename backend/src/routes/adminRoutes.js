@@ -4,6 +4,7 @@ const db = require('../models/database');
 const authMiddleware = require('../middlewares/authMiddleware');
 const adminMiddleware = require('../middlewares/adminMiddleware');
 const axios = require('axios');
+const bcrypt = require('bcryptjs');
 
 const CI = process.env.MISTICPAY_CI;
 const CS = process.env.MISTICPAY_CS;

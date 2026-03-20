@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById(tabName).classList.add('active');
 
             if (tabName === 'dashboard') carregarDashboard();
+            if (tabName === 'users') carregarUsuarios(currentUserPage);
+            if (tabName === 'ranking') carregarRanking();
             if (tabName === 'categorias') carregarCategorias();
             if (tabName === 'produtos') carregarProdutos();
             if (tabName === 'withdraw') { /* não precisa carregar nada */ }
@@ -47,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     carregarDashboard();
+    carregarUsuarios(currentUserPage);
+    carregarRanking();
     carregarCategorias();
     carregarProdutos();
 
@@ -134,6 +138,99 @@ async function carregarDashboard() {
     } catch (error) {
         console.error('Erro dashboard:', error);
         document.querySelectorAll('#statsContainer .stat-value').forEach(el => el.textContent = 'Erro');
+    }
+}
+
+// ========== USUÁRIOS ==========
+async function carregarUsuarios(page) {
+    const userData = getUserData();
+    if (!userData || !userData.token) return;
+
+    const tbody = document.getElementById('usersTableBody');
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Carregando...</td></tr>';
+
+    try {
+        console.log('Carregando usuários - página:', page);
+        const response = await fetch(`${API_BASE_URL}/admin/users?page=${page}`, {
+            headers: { 'Authorization': `Bearer ${userData.token}` }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Erro na resposta:', errorText);
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Dados recebidos:', data);
+
+        let html = '';
+        data.users.forEach(user => {
+            html += `<tr>
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td>${user.discord || '-'}</td>
+                <td>R$ ${Number(user.saldo).toFixed(2)}</td>
+                <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
+                <td>R$ ${Number(user.total_gasto).toFixed(2)}</td>
+                <td>${user.is_admin ? 'Sim' : 'Não'}</td>
+                <td><button class="action-btn" onclick="abrirModalAcoes(${user.id})"><i class="fas fa-cog"></i></button></td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+
+        const pagination = document.getElementById('userPagination');
+        pagination.innerHTML = '';
+        for (let i = 1; i <= data.totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            if (i === page) btn.classList.add('active');
+            btn.addEventListener('click', () => carregarUsuarios(i));
+            pagination.appendChild(btn);
+        }
+    } catch (error) {
+        console.error('Erro usuários:', error);
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:#f56565;">Erro ao carregar: ${error.message}</td></tr>`;
+    }
+}
+
+// ========== RANKING ==========
+async function carregarRanking() {
+    const userData = getUserData();
+    if (!userData || !userData.token) return;
+
+    const tbody = document.getElementById('rankingTableBody');
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>';
+
+    try {
+        console.log('Carregando ranking...');
+        const response = await fetch(`${API_BASE_URL}/admin/ranking?limit=10`, {
+            headers: { 'Authorization': `Bearer ${userData.token}` }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Erro na resposta:', errorText);
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Ranking recebido:', data);
+
+        let html = '';
+        data.forEach((user, index) => {
+            html += `<tr>
+                <td>${index + 1}</td>
+                <td>${user.username}</td>
+                <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
+                <td>${user.total_transacoes}</td>
+            </tr>`;
+        });
+        tbody.innerHTML = html;
+    } catch (error) {
+        console.error('Erro ranking:', error);
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#f56565;">Erro ao carregar: ${error.message}</td></tr>`;
     }
 }
 
@@ -471,53 +568,7 @@ document.getElementById('filtroCategoriaProdutos').addEventListener('change', ()
     carregarProdutos();
 });
 
-// ========== USUÁRIOS (FUNÇÕES EXISTENTES) ==========
-// Mantidas intactas do código original
-async function carregarUsuarios(page) {
-    const userData = getUserData();
-    if (!userData || !userData.token) return;
-
-    const tbody = document.getElementById('usersTableBody');
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;">Carregando...</td></tr>';
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/admin/users?page=${page}`, {
-            headers: { 'Authorization': `Bearer ${userData.token}` }
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-
-        let html = '';
-        data.users.forEach(user => {
-            html += `<tr>
-                <td>${user.id}</td>
-                <td>${user.username}</td>
-                <td>${user.email}</td>
-                <td>${user.discord || '-'}</td>
-                <td>R$ ${Number(user.saldo).toFixed(2)}</td>
-                <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
-                <td>R$ ${Number(user.total_gasto).toFixed(2)}</td>
-                <td>${user.is_admin ? 'Sim' : 'Não'}</td>
-                <td><button class="action-btn" onclick="abrirModalAcoes(${user.id})"><i class="fas fa-cog"></i></button></td>
-            </tr>`;
-        });
-        tbody.innerHTML = html;
-
-        const pagination = document.getElementById('userPagination');
-        pagination.innerHTML = '';
-        for (let i = 1; i <= data.totalPages; i++) {
-            const btn = document.createElement('button');
-            btn.textContent = i;
-            if (i === page) btn.classList.add('active');
-            btn.addEventListener('click', () => carregarUsuarios(i));
-            pagination.appendChild(btn);
-        }
-    } catch (error) {
-        console.error('Erro usuários:', error);
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#f56565;">Erro ao carregar</td></tr>';
-    }
-}
-
+// ========== MODAL DE AÇÕES DO USUÁRIO ==========
 function abrirModalAcoes(userId) {
     currentUserId = userId;
     const modal = document.getElementById('userActionModal');
@@ -538,6 +589,7 @@ function abrirModalAcoes(userId) {
     modal.classList.add('active');
 }
 
+// ========== EXECUÇÃO DAS AÇÕES ==========
 window.executarAcao = async (acao, userId) => {
     document.getElementById('userActionModal').classList.remove('active');
     const userData = getUserData();
@@ -546,7 +598,6 @@ window.executarAcao = async (acao, userId) => {
     let url = `${API_BASE_URL}/admin/users/${userId}`;
     let method = 'DELETE';
     let body = null;
-    let mensagem = '';
 
     switch (acao) {
         case 'excluir':
@@ -616,37 +667,6 @@ window.executarAcao = async (acao, userId) => {
         alert('Erro de conexão com o servidor');
     }
 };
-
-// ========== RANKING ==========
-async function carregarRanking() {
-    const userData = getUserData();
-    if (!userData || !userData.token) return;
-
-    const tbody = document.getElementById('rankingTableBody');
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>';
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/admin/ranking?limit=10`, {
-            headers: { 'Authorization': `Bearer ${userData.token}` }
-        });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-
-        let html = '';
-        data.forEach((user, index) => {
-            html += `<tr>
-                <td>${index + 1}</td>
-                <td>${user.username}</td>
-                <td>R$ ${Number(user.total_adicionado).toFixed(2)}</td>
-                <td>${user.total_transacoes}</td>
-            </tr>`;
-        });
-        tbody.innerHTML = html;
-    } catch (error) {
-        console.error('Erro ranking:', error);
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#f56565;">Erro ao carregar</td></tr>';
-    }
-}
 
 // ========== SAQUE ==========
 async function realizarSaque() {
