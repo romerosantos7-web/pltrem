@@ -1,6 +1,9 @@
 const API_BASE_URL = 'https://pltrem.onrender.com/api';
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Elementos
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
     // Carrega a lista de categorias para o sidebar
     carregarCategorias();
 
@@ -17,8 +20,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = new URL(link.href);
             const slug = url.searchParams.get('cat');
             if (slug) {
+                // Mostra loading
+                mostrarLoading('Carregando produtos...');
+
+                // Atualiza URL sem recarregar
                 history.pushState({ slug }, '', `?cat=${slug}`);
-                carregarCategoria(slug);
+
+                // Carrega nova categoria
+                carregarCategoria(slug).finally(() => {
+                    esconderLoading();
+                });
+
                 atualizarClasseAtiva(slug);
             }
         }
@@ -28,10 +40,33 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('popstate', (e) => {
         const params = new URLSearchParams(window.location.search);
         const slug = params.get('cat') || 'bladeball';
-        carregarCategoria(slug);
+
+        mostrarLoading('Carregando produtos...');
+        carregarCategoria(slug).finally(() => {
+            esconderLoading();
+        });
         atualizarClasseAtiva(slug);
     });
 });
+
+// Funções de controle do loading
+function mostrarLoading(mensagem = 'Carregando produtos...') {
+    const overlay = document.getElementById('loadingOverlay');
+    const textEl = document.getElementById('loadingText');
+    if (textEl) textEl.textContent = mensagem;
+    if (overlay) overlay.classList.add('active');
+
+    // Bloqueia scroll da página
+    document.body.style.overflow = 'hidden';
+}
+
+function esconderLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.classList.remove('active');
+
+    // Libera scroll da página
+    document.body.style.overflow = '';
+}
 
 async function carregarCategorias() {
     try {
