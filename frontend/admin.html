@@ -9,19 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        /* ========== VARIÁVEIS ========== */
-        :root {
-            --glass-bg: rgba(20, 20, 30, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-            --primary: #6366f1;
-            --secondary: #ec4899;
-            --success: #48bb78;
-            --danger: #f56565;
-            --warning: #ecc94b;
-        }
-
-        /* ========== ADMIN PAGE ========== */
+        /* Estilos adicionais para o admin */
         .admin-page {
             padding: 40px 0;
             min-height: 70vh;
@@ -36,26 +24,22 @@
 
         .admin-tab {
             padding: 12px 25px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
             border-radius: 40px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: 0.3s;
             font-weight: 600;
-            backdrop-filter: blur(5px);
-            box-shadow: var(--glass-shadow);
         }
 
         .admin-tab.active {
             background: var(--secondary);
             border-color: var(--secondary);
-            transform: translateY(-2px);
         }
 
         .admin-tab:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
         }
 
         .admin-section {
@@ -79,115 +63,30 @@
             }
         }
 
-        /* ========== CARDS ========== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
+        .btn-primary {
+            background: var(--primary);
             color: white;
-            transition: all 0.3s ease;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--secondary);
-            box-shadow: 0 10px 30px rgba(236, 72, 153, 0.3);
-        }
-
-        .stat-icon {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 15px;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.7;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        }
-
-        /* ========== TABELAS ========== */
-        .admin-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(5px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px;
-            color: white;
-            margin-bottom: 30px;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .admin-card h3 {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--secondary);
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .admin-table th,
-        .admin-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .admin-table th {
-            background: rgba(0, 0, 0, 0.3);
-            font-weight: 600;
-            color: var(--secondary);
-        }
-
-        .admin-table tr:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .action-btn {
-            background: transparent;
             border: none;
-            color: white;
-            font-size: 1.2rem;
+            padding: 10px 20px;
+            border-radius: 40px;
             cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 20px;
-            transition: 0.2s;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--secondary);
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
         }
 
-        /* ========== MODAL CENTRAL ========== */
+        .btn-danger {
+            background: #f56565;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -211,21 +110,16 @@
         }
 
         .modal-content {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 30px;
             padding: 30px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             color: white;
-            transform: scale(0.9);
-            transition: 0.3s;
-            box-shadow: var(--glass-shadow);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -234,14 +128,7 @@
             align-items: center;
             margin-bottom: 20px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 15px;
-        }
-
-        .modal-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--secondary);
+            padding-bottom: 10px;
         }
 
         .modal-close {
@@ -250,87 +137,6 @@
             color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .modal-close:hover {
-            color: var(--secondary);
-        }
-
-        .modal-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .modal-action {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid transparent;
-        }
-
-        .modal-action:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: var(--secondary);
-        }
-
-        .modal-action i {
-            width: 30px;
-            font-size: 1.3rem;
-            color: var(--secondary);
-        }
-
-        .modal-action span {
-            font-weight: 500;
-        }
-
-        /* ========== SELECT CUSTOMIZADO (TIPO PIX) ========== */
-        .pix-type-selector {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .pix-type-option {
-            flex: 1 1 auto;
-            min-width: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .pix-type-option:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .pix-type-option.selected {
-            background: var(--secondary);
-            border-color: var(--secondary);
-            box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
-        }
-
-        /* ========== FORMULÁRIO DE SAQUE ========== */
-        .withdraw-form {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 20px;
-            padding: 25px;
         }
 
         .form-group {
@@ -340,25 +146,94 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: white;
             font-weight: 500;
+            color: white;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            padding: 14px 18px;
-            border-radius: 50px;
+            padding: 12px 15px;
+            border-radius: 40px;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             font-size: 1rem;
-            transition: 0.2s;
         }
 
         .form-group input:focus {
             border-color: var(--secondary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3);
+        }
+
+        .icone-preview {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 2rem;
+            vertical-align: middle;
+            color: var(--secondary);
+        }
+
+        .icone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .icone-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.5rem;
+        }
+
+        .icone-item:hover {
+            background: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-table th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--secondary);
+        }
+
+        .admin-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            color: var(--secondary);
         }
 
         .btn-withdraw {
@@ -367,67 +242,30 @@
             border: none;
             padding: 14px 30px;
             border-radius: 50px;
-            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
-            width: 100%;
-            max-width: 300px;
-            margin: 20px auto 0;
-            display: block;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-withdraw:hover:not(:disabled) {
+        .btn-withdraw:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5);
+            box-shadow: 0 10px 20px rgba(236, 72, 153, 0.5);
         }
 
         .feedback-success {
             background: rgba(72, 187, 120, 0.2);
-            border: 1px solid var(--success);
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            margin-top: 20px;
+            border: 1px solid #48bb78;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
         }
 
         .feedback-error {
             background: rgba(245, 101, 101, 0.2);
-            border: 1px solid var(--danger);
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        /* ========== PAGINAÇÃO ========== */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .pagination button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .pagination button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .pagination button.active {
-            background: var(--secondary);
-            border-color: var(--secondary);
+            border: 1px solid #f56565;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -471,14 +309,102 @@
         </div>
     </aside>
 
-    <!-- MODAL DE AÇÕES DO USUÁRIO -->
-    <div class="modal-overlay" id="userActionModal">
+    <!-- Modal de seleção de ícone (reutilizável) -->
+    <div class="modal-overlay" id="iconeModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>Selecione um ícone</h3>
+                <button class="modal-close" id="fecharIconeModal">&times;</button>
+            </div>
+            <div class="icone-grid" id="iconeGrid"></div>
+        </div>
+    </div>
+
+    <!-- Modal de categoria -->
+    <div class="modal-overlay" id="categoriaModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-cog"></i> Ações do Usuário</h3>
-                <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+                <h3 id="categoriaModalTitle">Nova Categoria</h3>
+                <button class="modal-close" id="fecharCategoriaModal">&times;</button>
             </div>
-            <div class="modal-actions" id="modalActionContainer"></div>
+            <form id="categoriaForm">
+                <input type="hidden" id="categoriaId">
+                <div class="form-group">
+                    <label>Nome *</label>
+                    <input type="text" id="categoriaNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Ícone</label>
+                    <div class="icone-preview" id="categoriaIconePreview"><i class="fas fa-gamepad"></i></div>
+                    <button type="button" class="btn-outline" id="escolherIconeCategoria">Escolher ícone</button>
+                    <input type="hidden" id="categoriaIcone" value="fa-gamepad">
+                </div>
+                <div class="form-group">
+                    <label>Título da página *</label>
+                    <input type="text" id="categoriaTitulo" required>
+                </div>
+                <div class="form-group">
+                    <label>Subtítulo</label>
+                    <input type="text" id="categoriaSubtitulo">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="categoriaDescricao" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ordem</label>
+                    <input type="number" id="categoriaOrdem" value="0">
+                </div>
+                <button type="submit" class="btn-primary">Salvar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de produto -->
+    <div class="modal-overlay" id="produtoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="produtoModalTitle">Novo Produto</h3>
+                <button class="modal-close" id="fecharProdutoModal">&times;</button>
+            </div>
+            <form id="produtoForm">
+                <input type="hidden" id="produtoId">
+                <div class="form-group">
+                    <label>Categoria *</label>
+                    <select id="produtoCategoriaId" required>
+                        <option value="">Selecione...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nome *</label>
+                    <input type="text" id="produtoNome" required>
+                </div>
+                <div class="form-group">
+                    <label>Preço * (R$)</label>
+                    <input type="number" step="0.01" id="produtoPreco" required>
+                </div>
+                <div class="form-group">
+                    <label>Preço antigo (R$) (opcional)</label>
+                    <input type="number" step="0.01" id="produtoPrecoAntigo">
+                </div>
+                <div class="form-group">
+                    <label>Informação extra</label>
+                    <input type="text" id="produtoInfo">
+                </div>
+                <div class="form-group">
+                    <label>Ícone</label>
+                    <div class="icone-preview" id="produtoIconePreview"><i class="fas fa-box"></i></div>
+                    <button type="button" class="btn-outline" id="escolherIconeProduto">Escolher ícone</button>
+                    <input type="hidden" id="produtoIcone" value="fa-box">
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="produtoDestaque"> Destaque</label>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="produtoAtivo" checked> Ativo</label>
+                </div>
+                <button type="submit" class="btn-primary">Salvar</button>
+            </form>
         </div>
     </div>
 
@@ -488,10 +414,9 @@
                 <div class="admin-tabs">
                     <button class="admin-tab active" data-tab="dashboard"><i class="fas fa-chart-line"></i>
                         Dashboard</button>
-                    <button class="admin-tab" data-tab="users"><i class="fas fa-users"></i> Usuários</button>
-                    <button class="admin-tab" data-tab="ranking"><i class="fas fa-trophy"></i> Ranking</button>
+                    <button class="admin-tab" data-tab="categorias"><i class="fas fa-tags"></i> Categorias</button>
+                    <button class="admin-tab" data-tab="produtos"><i class="fas fa-boxes"></i> Produtos</button>
                     <button class="admin-tab" data-tab="withdraw"><i class="fas fa-money-bill-wave"></i> Saque</button>
-                    <button class="admin-tab" data-tab="products"><i class="fas fa-box"></i> Produtos</button>
                 </div>
 
                 <!-- DASHBOARD -->
@@ -531,50 +456,67 @@
                     </div>
                 </div>
 
-                <!-- USUÁRIOS -->
-                <div class="admin-section" id="users">
-                    <h3><i class="fas fa-users"></i> Gerenciar Usuários</h3>
+                <!-- CATEGORIAS -->
+                <div class="admin-section" id="categorias">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-tags"></i> Categorias</h3>
+                        <button class="btn-primary" id="novaCategoriaBtn"><i class="fas fa-plus"></i> Nova
+                            Categoria</button>
+                    </div>
                     <div class="table-responsive">
                         <table class="admin-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Usuário</th>
-                                    <th>Email</th>
-                                    <th>Discord</th>
-                                    <th>Saldo</th>
-                                    <th>Total Adic.</th>
-                                    <th>Total Gasto</th>
-                                    <th>Admin</th>
+                                    <th>Ícone</th>
+                                    <th>Nome</th>
+                                    <th>Slug</th>
+                                    <th>Título</th>
+                                    <th>Ordem</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="usersTableBody">
+                            <tbody id="categoriasTableBody">
                                 <tr>
-                                    <td colspan="9" style="text-align:center;">Carregando...</td>
+                                    <td colspan="7">Carregando...</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div id="userPagination" class="pagination"></div>
                 </div>
 
-                <!-- RANKING -->
-                <div class="admin-section" id="ranking">
-                    <h3><i class="fas fa-trophy"></i> Ranking de Adições</h3>
+                <!-- PRODUTOS -->
+                <div class="admin-section" id="produtos">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3><i class="fas fa-boxes"></i> Produtos</h3>
+                        <button class="btn-primary" id="novoProdutoBtn"><i class="fas fa-plus"></i> Novo
+                            Produto</button>
+                    </div>
+                    <div class="form-group" style="max-width: 300px;">
+                        <label>Filtrar por categoria:</label>
+                        <select id="filtroCategoriaProdutos">
+                            <option value="">Todas</option>
+                        </select>
+                    </div>
                     <div class="table-responsive">
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Usuário</th>
-                                    <th>Total Adicionado</th>
-                                    <th>Transações</th>
+                                    <th>ID</th>
+                                    <th>Ícone</th>
+                                    <th>Nome</th>
+                                    <th>Categoria</th>
+                                    <th>Preço</th>
+                                    <th>Destaque</th>
+                                    <th>Ativo</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="rankingTableBody">
+                            <tbody id="produtosTableBody">
                                 <tr>
-                                    <td colspan="4" style="text-align:center;">Carregando...</td>
+                                    <td colspan="8">Carregando...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -585,12 +527,9 @@
                 <div class="admin-section" id="withdraw">
                     <h3><i class="fas fa-money-bill-wave"></i> Saque Rápido (Admin)</h3>
                     <div class="withdraw-form">
-                        <div class="form-group">
-                            <label><i class="fas fa-dollar-sign"></i> Valor (R$)</label>
-                            <input type="number" id="withdrawAmount" min="5" step="0.01" placeholder="Ex: 50.00">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-key"></i> Tipo de Chave PIX</label>
+                        <div class="form-group"><label>Valor (R$)</label><input type="number" id="withdrawAmount"
+                                min="5" step="0.01" placeholder="Ex: 50.00"></div>
+                        <div class="form-group"><label>Tipo de Chave PIX</label>
                             <div class="pix-type-selector" id="pixTypeSelector">
                                 <div class="pix-type-option selected" data-value="CPF">CPF</div>
                                 <div class="pix-type-option" data-value="EMAIL">E-mail</div>
@@ -599,31 +538,55 @@
                             </div>
                             <input type="hidden" id="pixKeyType" value="CPF">
                         </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-paste"></i> Chave PIX</label>
-                            <input type="text" id="pixKey" placeholder="Digite a chave PIX">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-align-left"></i> Descrição (opcional)</label>
-                            <input type="text" id="withdrawDescription" placeholder="Ex: Saque administrativo">
-                        </div>
+                        <div class="form-group"><label>Chave PIX</label><input type="text" id="pixKey"
+                                placeholder="Digite a chave PIX"></div>
+                        <div class="form-group"><label>Descrição (opcional)</label><input type="text"
+                                id="withdrawDescription" placeholder="Ex: Saque administrativo"></div>
                         <button class="btn-withdraw" id="btnWithdraw"><i class="fas fa-paper-plane"></i> Realizar
                             Saque</button>
                         <div id="withdrawFeedback"></div>
                     </div>
-                </div>
-
-                <!-- PRODUTOS (placeholder) -->
-                <div class="admin-section" id="products">
-                    <h3><i class="fas fa-box"></i> Gerenciar Produtos</h3>
-                    <p style="text-align:center; opacity:0.7;">Em breve...</p>
                 </div>
             </div>
         </div>
     </main>
 
     <footer class="glass-footer animate-fade-up">
-        <!-- ... footer existente (copie do seu arquivo) ... -->
+        <div class="container footer-container">
+            <div class="footer-col">
+                <div class="footer-logo"><i class="fas fa-cube"></i> RBX<span>Store</span></div>
+                <p>O lugar mais seguro para comprar Robux e itens Roblox.</p>
+                <div class="social-icons"><a href="#"><i class="fab fa-discord"></i></a><a href="#"><i
+                            class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-tiktok"></i></a></div>
+            </div>
+            <div class="footer-col">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="robux.html">Robux</a></li>
+                    <li><a href="itens.html">Itens</a></li>
+                    <li><a href="atendimento.html">Atendimento</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="termos.html">Termos de Uso</a></li>
+                    <li><a href="privacidade.html">Política de Privacidade</a></li>
+                    <li><a href="#">Reembolsos</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contato</h4>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> suporte@rbxstore.com</li>
+                    <li><i class="fas fa-clock"></i> 24/7 Online</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 RBX Store. Todos os direitos reservados.</p>
+        </div>
     </footer>
 
     <script src="js/script.js"></script>

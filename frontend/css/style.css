@@ -3158,3 +3158,287 @@ input[type=range]::-webkit-slider-thumb {
 #player-musica-nome {
     animation: slideIn 0.3s ease;
 }
+
+/* ========== PÁGINA DE CATEGORIA (PRODUTOS) ========== */
+.categoria-page {
+    padding: 40px 0;
+    min-height: 70vh;
+}
+
+.categoria-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+/* Sidebar de categorias */
+.categoria-sidebar {
+    flex: 0 0 280px;
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    align-self: start;
+}
+
+.categoria-sidebar h2 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: var(--secondary);
+}
+
+.categoria-sidebar .subtitulo {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 15px;
+}
+
+.categoria-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.categoria-lista li {
+    margin-bottom: 10px;
+}
+
+.categoria-lista a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    border-radius: 15px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid transparent;
+}
+
+.categoria-lista a:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+    border-color: var(--secondary);
+}
+
+.categoria-lista a.active {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
+}
+
+.categoria-lista i {
+    width: 24px;
+    font-size: 1.2rem;
+    color: var(--secondary);
+}
+
+.categoria-lista a.active i {
+    color: white;
+}
+
+/* Conteúdo principal */
+.categoria-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.categoria-content h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.categoria-content .descricao {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin-bottom: 30px;
+}
+
+/* Grid de produtos */
+.produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.produto-card {
+    background: rgba(20, 20, 30, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 25px;
+    padding: 20px;
+    color: white;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.produto-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--secondary);
+    box-shadow: 0 15px 35px rgba(236, 72, 153, 0.3);
+}
+
+.produto-nome {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--secondary);
+}
+
+.produto-preco {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 15px 0 5px;
+}
+
+.produto-preco small {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.7;
+    text-decoration: line-through;
+    margin-left: 8px;
+}
+
+.produto-info {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.btn-checkout {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+.btn-checkout:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.5);
+}
+
+@media (max-width: 768px) {
+    .categoria-container {
+        flex-direction: column;
+    }
+
+    .categoria-sidebar {
+        flex: auto;
+        width: 100%;
+    }
+}
+
+/* ========== PÁGINA DE CATEGORIA - REFINAMENTOS ========== */
+.categoria-sidebar {
+    backdrop-filter: blur(12px);
+    background: rgba(20, 20, 30, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
+}
+
+.categoria-sidebar:hover {
+    border-color: rgba(236, 72, 153, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.categoria-lista a {
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.categoria-lista a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.categoria-lista a:hover::before {
+    left: 100%;
+}
+
+.categoria-lista a.active {
+    background: linear-gradient(45deg, var(--secondary), #b93c7a);
+    border: none;
+    box-shadow: 0 5px 15px rgba(236, 72, 153, 0.5);
+}
+
+.produto-card {
+    backdrop-filter: blur(12px);
+    background: rgba(25, 25, 35, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.produto-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+
+.produto-card:hover::after {
+    opacity: 0.5;
+}
+
+.produto-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--secondary);
+    box-shadow: 0 20px 40px rgba(236, 72, 153, 0.3);
+}
+
+.produto-nome {
+    background: linear-gradient(135deg, #fff, var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5rem;
+}
+
+.btn-checkout {
+    background: rgba(236, 72, 153, 0.2);
+    border: 1px solid var(--secondary);
+    backdrop-filter: blur(5px);
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-checkout:hover {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+}
