@@ -3442,3 +3442,160 @@ input[type=range]::-webkit-slider-thumb {
     border-color: var(--secondary);
     box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
 }
+
+/* ========== CORREÇÃO DE TEXTOS PRETOS ========== */
+
+/* Garantir que todos os textos dentro de cards glass sejam brancos */
+.glass-card,
+.admin-card,
+.stat-card,
+.produto-card,
+.categoria-sidebar,
+.categoria-content,
+.modal-content,
+.withdraw-form,
+.admin-table,
+.pagination button {
+    color: white !important;
+}
+
+/* Corrigir textos específicos do admin */
+.admin-tab,
+.admin-tab:visited,
+.admin-tab:active {
+    color: white;
+}
+
+/* Tabelas admin */
+.admin-table td,
+.admin-table th {
+    color: white;
+}
+
+/* Formulários e inputs */
+.form-group label,
+.form-group input,
+.form-group select,
+.form-group textarea {
+    color: white;
+}
+
+.form-group input::placeholder,
+.form-group select::placeholder,
+.form-group textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Botões */
+.btn-primary,
+.btn-primary:visited,
+.btn-primary:active {
+    color: white;
+}
+
+/* Links dentro do sidebar e header */
+.sidebar-nav a,
+.sidebar-nav a:visited,
+.header-actions a,
+.header-actions a:visited {
+    color: white;
+}
+
+/* Página de categoria pública */
+.categoria-sidebar h2,
+.categoria-sidebar .subtitulo,
+.categoria-lista a,
+.categoria-lista a:visited {
+    color: white;
+}
+
+.categoria-content h1,
+.categoria-content .descricao {
+    color: white;
+}
+
+.produto-nome {
+    color: var(--secondary) !important;
+    /* mantém a cor secundária */
+}
+
+.produto-preco {
+    color: white;
+}
+
+.produto-info {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Paginação */
+.pagination button,
+.pagination button:visited {
+    color: white;
+}
+
+/* Mensagens de feedback */
+.feedback-success,
+.feedback-error {
+    color: white;
+}
+
+/* Modais */
+.modal-header h3,
+.modal-header .modal-close {
+    color: white;
+}
+
+.modal-action span {
+    color: white;
+}
+
+/* Garantir que ícones mantenham a cor */
+i {
+    color: inherit;
+}
+
+/* Forçar cor branca em qualquer texto que possa estar preto */
+body,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+div,
+li,
+a {
+    color: white;
+}
+
+/* Exceções para elementos que devem ter cor diferente */
+.highlight {
+    color: var(--secondary) !important;
+}
+
+.produto-nome {
+    color: var(--secondary) !important;
+}
+
+.admin-tab.active {
+    color: white !important;
+}
+
+.categoria-lista a.active {
+    color: white !important;
+}
+
+.categoria-lista a.active i {
+    color: white !important;
+}
+
+/* Links dentro de parágrafos podem ter cor diferente */
+p a {
+    color: var(--secondary);
+}
+
+p a:hover {
+    text-decoration: underline;
+}
