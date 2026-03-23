@@ -17,7 +17,7 @@ function esconderLoading() {
 
 document.addEventListener('DOMContentLoaded', function () {
     // MOSTRA LOADING IMEDIATAMENTE AO CARREGAR A PÁGINA
-    mostrarLoading('Iniciando servidor... Aguarde um momento');
+    mostrarLoading('Carregando todos os produtos, aguarde...');
 
     // Carrega a lista de categorias
     carregarCategorias();
