@@ -1,16 +1,47 @@
 const API_BASE_URL = 'https://pltrem.onrender.com/api';
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Elementos
-    const loadingOverlay = document.getElementById('loadingOverlay');
+// Funções de controle do loading
+function mostrarLoading(mensagem = 'Carregando produtos...') {
+    const overlay = document.getElementById('loadingOverlay');
+    const textEl = document.getElementById('loadingText');
+    if (textEl) textEl.textContent = mensagem;
+    if (overlay) overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
-    // Carrega a lista de categorias para o sidebar
+function esconderLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // MOSTRA LOADING IMEDIATAMENTE AO CARREGAR A PÁGINA
+    mostrarLoading('Iniciando servidor... Aguarde um momento');
+
+    // Carrega a lista de categorias
     carregarCategorias();
 
     // Carrega a categoria inicial baseada na URL (?cat=nome-da-categoria)
     const urlParams = new URLSearchParams(window.location.search);
-    const slug = urlParams.get('cat') || 'bladeball'; // fallback
-    carregarCategoria(slug);
+    const slug = urlParams.get('cat') || '';
+
+    // Se não houver slug na URL, primeiro carregamos as categorias para obter a primeira
+    if (!slug) {
+        // Aguarda as categorias carregarem e pega a primeira
+        carregarCategorias().then(() => {
+            const primeiraCategoria = obterPrimeiraCategoria();
+            if (primeiraCategoria) {
+                atualizarURL(primeiraCategoria);
+                carregarCategoria(primeiraCategoria).finally(() => esconderLoading());
+            } else {
+                esconderLoading();
+            }
+        }).catch(() => esconderLoading());
+    } else {
+        // Carrega a categoria específica
+        carregarCategoria(slug).finally(() => esconderLoading());
+    }
 
     // Intercepta cliques nos links de categoria para navegação suave
     document.addEventListener('click', (e) => {
@@ -20,17 +51,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = new URL(link.href);
             const slug = url.searchParams.get('cat');
             if (slug) {
-                // Mostra loading
                 mostrarLoading('Carregando produtos...');
-
-                // Atualiza URL sem recarregar
-                history.pushState({ slug }, '', `?cat=${slug}`);
-
-                // Carrega nova categoria
-                carregarCategoria(slug).finally(() => {
-                    esconderLoading();
-                });
-
+                atualizarURL(slug);
+                carregarCategoria(slug).finally(() => esconderLoading());
                 atualizarClasseAtiva(slug);
             }
         }
@@ -39,37 +62,31 @@ document.addEventListener('DOMContentLoaded', function () {
     // Navegação pelo histórico do navegador
     window.addEventListener('popstate', (e) => {
         const params = new URLSearchParams(window.location.search);
-        const slug = params.get('cat') || 'bladeball';
-
-        mostrarLoading('Carregando produtos...');
-        carregarCategoria(slug).finally(() => {
-            esconderLoading();
-        });
-        atualizarClasseAtiva(slug);
+        const slug = params.get('cat');
+        if (slug) {
+            mostrarLoading('Carregando produtos...');
+            carregarCategoria(slug).finally(() => esconderLoading());
+            atualizarClasseAtiva(slug);
+        }
     });
 });
 
-// Funções de controle do loading
-function mostrarLoading(mensagem = 'Carregando produtos...') {
-    const overlay = document.getElementById('loadingOverlay');
-    const textEl = document.getElementById('loadingText');
-    if (textEl) textEl.textContent = mensagem;
-    if (overlay) overlay.classList.add('active');
-
-    // Bloqueia scroll da página
-    document.body.style.overflow = 'hidden';
+function atualizarURL(slug) {
+    history.pushState({ slug }, '', `?cat=${slug}`);
 }
 
-function esconderLoading() {
-    const overlay = document.getElementById('loadingOverlay');
-    if (overlay) overlay.classList.remove('active');
-
-    // Libera scroll da página
-    document.body.style.overflow = '';
+function obterPrimeiraCategoria() {
+    const primeiroLink = document.querySelector('.categoria-lista a');
+    if (primeiroLink) {
+        const url = new URL(primeiroLink.href);
+        return url.searchParams.get('cat');
+    }
+    return null;
 }
 
 async function carregarCategorias() {
     try {
+        console.log('Carregando categorias...');
         const response = await fetch(`${API_BASE_URL}/categorias`);
         if (!response.ok) throw new Error('Erro ao carregar categorias');
         const categorias = await response.json();
@@ -88,12 +105,16 @@ async function carregarCategorias() {
 
         // Destacar categoria ativa
         const urlParams = new URLSearchParams(window.location.search);
-        const slugAtivo = urlParams.get('cat') || 'bladeball';
-        atualizarClasseAtiva(slugAtivo);
+        const slugAtivo = urlParams.get('cat');
+        if (slugAtivo) {
+            atualizarClasseAtiva(slugAtivo);
+        }
 
+        return categorias;
     } catch (error) {
         console.error('Erro ao carregar categorias:', error);
         document.getElementById('categoriaLista').innerHTML = '<li>Erro ao carregar</li>';
+        throw error;
     }
 }
 
@@ -109,16 +130,16 @@ function atualizarClasseAtiva(slug) {
 
 async function carregarCategoria(slug) {
     try {
+        console.log('Carregando categoria:', slug);
         const response = await fetch(`${API_BASE_URL}/categorias/${slug}`);
         if (!response.ok) throw new Error('Categoria não encontrada');
 
         const data = await response.json();
         const { categoria, produtos } = data;
 
-        // Atualiza título e descrição
         const contentDiv = document.getElementById('conteudoCategoria');
         let html = `
-            <h1>${categoria.titulo}</h1>
+            <h1>${categoria.titulo || categoria.nome}</h1>
             <div class="descricao">${categoria.descricao || ''}</div>
             <div class="produtos-grid">
         `;
@@ -127,7 +148,6 @@ async function carregarCategoria(slug) {
             html += '<p style="text-align:center; width:100%;">Nenhum produto disponível nesta categoria.</p>';
         } else {
             produtos.forEach(prod => {
-                // Garantir que preço seja número
                 const preco = parseFloat(prod.preco) || 0;
                 const precoAntigo = prod.preco_antigo ? parseFloat(prod.preco_antigo) : null;
 
@@ -156,6 +176,7 @@ async function carregarCategoria(slug) {
 
     } catch (error) {
         console.error('Erro ao carregar categoria:', error);
-        document.getElementById('conteudoCategoria').innerHTML = '<p style="text-align:center;">Erro ao carregar produtos</p>';
+        document.getElementById('conteudoCategoria').innerHTML = '<p style="text-align:center;">Erro ao carregar produtos. Tente novamente mais tarde.</p>';
+        throw error;
     }
 }
